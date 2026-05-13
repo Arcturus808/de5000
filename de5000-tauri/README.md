@@ -167,7 +167,7 @@ de5000-tauri/
 
 ## Push Notifications (ntfy)
 
-The app embeds an [ntfy-rs](https://github.com/user/ntfy-rs) server, enabling instant push notifications to your phone when alerts trigger — no cloud service required. The server runs as a background thread within the app (single binary, no external process).
+The app embeds an [ntfy-rs](https://github.com/user/ntfy-rs) server, enabling instant push notifications to your phone when alerts trigger — no cloud service required. ntfy-rs is included as a Cargo library dependency and compiled directly into the app — the server runs as a background thread, so no separate binary or external process is needed.
 
 ### How It Works
 
