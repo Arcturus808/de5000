@@ -1,0 +1,21 @@
+{
+  "theme_color": "#FFD117",
+  "display": "standalone",
+  "background_color": "#F2F4F4",
+  "icons": [
+    {
+      "purpose": "any maskable",
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "purpose": "any maskable",
+      "src": "/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "short_name": "DE-5000",
+  "name": "DE-5000"
+}

@@ -1,0 +1,26 @@
+[package]
+name = "de5000-tauri"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+name = "de5000_tauri_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2.11", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serialport = "4"
+ntfy-rs = { path = "../../../../NTFY/ntfy-rs" }
+local-ip-address = "0.6"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1

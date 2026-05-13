@@ -1,0 +1,195 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 100 900;
+	font-stretch: 100%;
+	font-display: swap;
+	src: url('/fonts/roboto-latin.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 300 800;
+	font-stretch: 100%;
+	font-display: swap;
+	src: url('/fonts/opensans-latin.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/poppins-400-latin.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/fonts/poppins-700-latin.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'DSEG14-Classic-Italic';
+	src: url('/fonts/DSEG14Classic-Italic.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: 'Courier New', monospace;
+	background: var(--app-bg);
+	color: var(--app-text);
+	min-height: 100vh;
+	padding: 12px;
+	--readout-font: 'Courier New', monospace;
+	--main-value-font: 'Courier New', monospace;
+	--readout-color: #00ff00;
+	--label-color: #888888;
+	--app-title-color: #00ff00;
+	--card-title-color: #cccccc;
+	--app-bg: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+	--app-text: #e0e0e0;
+	--surface: rgba(0, 0, 0, 0.4);
+	--surface-muted: rgba(0, 0, 0, 0.3);
+	--surface-strong: rgba(0, 0, 0, 0.5);
+	--control-bg: rgba(0, 0, 0, 0.6);
+	--option-bg: #1e1e1e;
+	--border: rgba(255, 255, 255, 0.1);
+	--border-strong: rgba(255, 255, 255, 0.2);
+	--primary-accent: #00ff00;
+	--primary-accent-soft: rgba(0, 255, 0, 0.1);
+	--primary-accent-muted: rgba(0, 255, 0, 0.2);
+	--primary-accent-panel: rgba(0, 255, 0, 0.3);
+	--primary-accent-border: rgba(0, 255, 0, 0.5);
+	--secondary-accent: #00ccff;
+	--secondary-accent-text: #00aaff;
+	--secondary-accent-soft: rgba(0, 100, 200, 0.2);
+	--secondary-accent-muted: rgba(0, 150, 255, 0.3);
+	--secondary-accent-border: rgba(0, 150, 255, 0.5);
+	--warning-accent: #ff8800;
+	--warning-accent-soft: rgba(255, 136, 0, 0.1);
+	--warning-accent-border: rgba(255, 136, 0, 0.5);
+	--danger-accent: #ff4444;
+	--danger-accent-soft: rgba(255, 68, 68, 0.15);
+	--danger-accent-border: rgba(255, 68, 68, 0.5);
+	--button-primary-start: #0066aa;
+	--button-primary-end: #0088ff;
+	--button-success-start: #00aa00;
+	--button-success-end: #00ff00;
+	--button-warning-start: #aa6600;
+	--button-warning-end: #ff8800;
+	--button-danger-start: #aa0000;
+	--button-danger-end: #ff0000;
+	--button-disabled: #666666;
+	--button-text-on-success: #000000;
+	--button-text-on-color: #ffffff;
+	--chart-bg: rgba(0, 0, 0, 0.3);
+	--chart-grid: rgba(255, 255, 255, 0.1);
+	--chart-axis: #888888;
+	--modal-bg: #1e1e1e;
+	--modal-overlay: rgba(0, 0, 0, 0.7);
+	--popover-bg: rgba(0, 0, 0, 0.95);
+	--shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+	--button-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	--button-shadow-hover-primary: 0 4px 8px rgba(0, 136, 255, 0.3);
+	--button-shadow-hover-success: 0 4px 8px rgba(0, 255, 0, 0.3);
+	--muted-text: #888888;
+	--subtle-text: #666666;
+	--input-placeholder: #555555;
+	--switch-bg: #444444;
+	--switch-thumb: #cccccc;
+	--swatch-border: rgba(255, 255, 255, 0.3);
+	--title-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+	--readout-glow: 0 0 10px rgba(0, 255, 0, 0.3);
+	--status-glow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+body[data-theme='light'] {
+	--app-bg: linear-gradient(135deg, #eef3f6 0%, #dfe8ee 100%);
+	--app-text: #1b2329;
+	--surface: #ffffff;
+	--surface-muted: #f6f8fa;
+	--surface-strong: #eef3f6;
+	--control-bg: #ffffff;
+	--option-bg: #ffffff;
+	--border: rgba(42, 64, 76, 0.18);
+	--border-strong: rgba(42, 64, 76, 0.34);
+	--primary-accent: #00b81f;
+	--primary-accent-soft: rgba(0, 184, 31, 0.08);
+	--primary-accent-muted: rgba(0, 184, 31, 0.14);
+	--primary-accent-panel: rgba(0, 184, 31, 0.22);
+	--primary-accent-border: rgba(0, 184, 31, 0.38);
+	--secondary-accent: #009fd6;
+	--secondary-accent-text: #0078b8;
+	--secondary-accent-soft: rgba(0, 159, 214, 0.12);
+	--secondary-accent-muted: rgba(0, 159, 214, 0.18);
+	--secondary-accent-border: rgba(0, 159, 214, 0.35);
+	--warning-accent: #d97706;
+	--warning-accent-soft: rgba(217, 119, 6, 0.1);
+	--warning-accent-border: rgba(217, 119, 6, 0.4);
+	--danger-accent: #dc2626;
+	--danger-accent-soft: rgba(220, 38, 38, 0.1);
+	--danger-accent-border: rgba(220, 38, 38, 0.4);
+	--button-primary-start: #006cbe;
+	--button-primary-end: #0088d8;
+	--button-success-start: #009a1b;
+	--button-success-end: #00c925;
+	--button-warning-start: #b65f00;
+	--button-warning-end: #d97706;
+	--button-danger-start: #b91c1c;
+	--button-danger-end: #dc2626;
+	--button-disabled: #9aa6af;
+	--button-text-on-success: #ffffff;
+	--chart-bg: #f8fafb;
+	--chart-grid: rgba(44, 62, 74, 0.12);
+	--chart-axis: #697783;
+	--modal-bg: #ffffff;
+	--modal-overlay: rgba(12, 18, 22, 0.45);
+	--popover-bg: #ffffff;
+	--shadow: 0 12px 32px rgba(24, 39, 50, 0.18);
+	--button-shadow: 0 2px 5px rgba(24, 39, 50, 0.16);
+	--button-shadow-hover-primary: 0 4px 10px rgba(0, 120, 212, 0.25);
+	--button-shadow-hover-success: 0 4px 10px rgba(0, 184, 31, 0.2);
+	--muted-text: #5d6872;
+	--subtle-text: #7d8790;
+	--input-placeholder: #8b959e;
+	--switch-bg: #b9c3ca;
+	--switch-thumb: #ffffff;
+	--swatch-border: rgba(42, 64, 76, 0.28);
+	--title-glow: none;
+	--readout-glow: 0 0 5px rgba(0, 184, 31, 0.16);
+	--status-glow: 0 0 4px rgba(0, 184, 31, 0.2);
+	--label-color: #45515b;
+	--card-title-color: #1f2a32;
+}
+
+.container {
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+@keyframes flash {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+@keyframes fadeOut {
+	0%, 80% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+	body {
+		padding: 10px;
+	}
+}
