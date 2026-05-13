@@ -35,7 +35,7 @@ pub struct NtfyStatus {
 }
 
 #[tauri::command]
-pub fn ntfy_start(
+pub async fn ntfy_start(
     state: tauri::State<'_, NtfyState>,
     port: Option<u16>,
     topic: Option<String>,
@@ -74,7 +74,7 @@ pub fn ntfy_start(
         },
     );
 
-    let handle = ntfy::start(config).map_err(|e| format!("Failed to start ntfy: {}", e))?;
+    let handle = ntfy::start_async(config).await.map_err(|e| format!("Failed to start ntfy: {}", e))?;
     *state.handle.lock().map_err(|e| e.to_string())? = Some(handle);
 
     Ok(NtfyStatus {
