@@ -10,6 +10,9 @@ dist/
 **/src-tauri/target/
 **/src-tauri/target-ra/
 
+# Sidecar binaries (server is now embedded)
+**/src-tauri/binaries/
+
 # Environment
 .env
 .env.*
