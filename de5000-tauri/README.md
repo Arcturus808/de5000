@@ -64,6 +64,7 @@ The phototransistor is 5 mm with black daylight filter and 940 nm sensitivity.
 Fabricate the sensor unit base from a thin, flat piece of flexible plastic (old loyalty cards, snack can lids, etc.) Punch a hole in the base so the IR can hit the sensor. If you make the bottom tab small enough, the base snaps into place in the meter and holds the sensor securely — while still allowing easy removal.
 
 <img src="../img/template.png" alt="Sensor unit base template" width="50%">
+
 [Download the sensor unit template (PDF)](../img/template.pdf)
 
 > **Printable template:** Print at actual size / 100% scale. Do not select "Fit to Page" in the print dialog.
