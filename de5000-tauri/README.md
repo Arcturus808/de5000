@@ -46,11 +46,11 @@ Instead of purchasing the official DE-5000-USB interface module, you can build y
 
 At the rear of the DE-5000, the photosensor unit fits into the IR port's square pocket and is held in place with tabs. The phototransistor picks up the IR signal and triggers RXD of the CH340E, which sends the signal to a COM port.
 
-![CH340E](../img/ch340e.jpg)
+<img src="../img/ch340e.jpg" alt="CH340E" width="50%">
 
 The phototransistor is 5 mm with black daylight filter and 940 nm sensitivity.
 
-![Phototransistor](../img/phototransistor.png)
+<img src="../img/phototransistor.png" alt="Phototransistor" width="50%">
 
 **Phototransistor wiring:**
 - Collector lead → RXD
@@ -58,7 +58,6 @@ The phototransistor is 5 mm with black daylight filter and 940 nm sensitivity.
 - 510 Ω pullup resistor between 3V3 and RXD
 
 ![CH340E wiring diagram](../img/ch340e_wiring.jpg)
-![CH340E assembled](../img/ch340e_asmbly.jpg)
 
 ### Sensor Unit
 
@@ -83,6 +82,8 @@ Solder a two-conductor cable to the leads and hot-glue the joint to the base.
 ![Sensor unit top view](../img/sensor_top_2.jpg)
 
 Protect the USB module with clear heat shrink.
+
+![CH340E assembled](../img/ch340e_asmbly.jpg)
 
 ## Quick Start
 
