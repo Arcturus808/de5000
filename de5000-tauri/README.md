@@ -38,6 +38,52 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 - [Node.js](https://nodejs.org/) (v18+)
 - npm
 
+## IR to USB Adapter
+
+Instead of purchasing the official DE-5000-USB interface module, you can build your own adapter with an IR phototransistor, pullup resistor, and CH340E USB-to-serial module. You don't even need to 3D print anything — just cut a piece of plastic to size and mount the phototransistor to it with hot glue. The adapter consists of two parts: the photosensor unit and the CH340E module, connected by a two-conductor cable or miniature coax.
+
+![Adapter](../img/adapter.jpg)
+
+At the rear of the DE-5000, the photosensor unit fits into the IR port's square pocket and is held in place with tabs. The phototransistor picks up the IR signal and triggers RXD of the CH340E, which sends the signal to a COM port.
+
+![CH340E](../img/ch340e.jpg)
+
+The phototransistor is 5 mm with black daylight filter and 940 nm sensitivity.
+
+![Phototransistor](../img/phototransistor.png)
+
+**Phototransistor wiring:**
+- Collector lead → RXD
+- Emitter lead → GND
+- 510 Ω pullup resistor between 3V3 and RXD
+
+![CH340E wiring diagram](../img/ch340e_wiring.jpg)
+![CH340E assembled](../img/ch340e_asmbly.jpg)
+
+### Sensor Unit
+
+Fabricate the sensor unit base from a thin, flat piece of flexible plastic (old loyalty cards, snack can lids, etc.) Punch a hole in the base so the IR can hit the sensor. If you make the bottom tab small enough, the base snaps into place in the meter and holds the sensor securely — while still allowing easy removal.
+
+![Sensor unit base template](../img/template.png)
+[Download the sensor unit template (PDF)](../img/template.pdf)
+
+> **Printable template:** Print at actual size / 100% scale. Do not select "Fit to Page" in the print dialog.
+> - **Chrome:** More settings → Scale → Default or Custom 100%
+> - **Edge:** More settings → Actual size
+> - **Firefox:** More settings → Scale → 100%
+
+Bend the leads of the phototransistor so it's pointing toward the hole.
+
+![Sensor unit side view](../img/sensor_side.jpg)
+![Sensor unit bottom view](../img/sensor_bottom.jpg)
+
+Solder a two-conductor cable to the leads and hot-glue the joint to the base.
+
+![Sensor unit top view](../img/sensor_top_1.jpg)
+![Sensor unit top view](../img/sensor_top_2.jpg)
+
+Protect the USB module with clear heat shrink.
+
 ## Quick Start
 
 Download the latest `de5000-tauri.exe` from [Releases](../../releases) and run it. No installation needed.
