@@ -63,7 +63,7 @@ The phototransistor is 5 mm with black daylight filter and 940 nm sensitivity.
 
 Fabricate the sensor unit base from a thin, flat piece of flexible plastic (old loyalty cards, snack can lids, etc.) Punch a hole in the base so the IR can hit the sensor. If you make the bottom tab small enough, the base snaps into place in the meter and holds the sensor securely — while still allowing easy removal.
 
-![Sensor unit base template](../img/template.png)
+<img src="../img/template.png" alt="Sensor unit base template" width="50%">
 [Download the sensor unit template (PDF)](../img/template.pdf)
 
 > **Printable template:** Print at actual size / 100% scale. Do not select "Fit to Page" in the print dialog.
@@ -73,17 +73,17 @@ Fabricate the sensor unit base from a thin, flat piece of flexible plastic (old 
 
 Bend the leads of the phototransistor so it's pointing toward the hole.
 
-![Sensor unit side view](../img/sensor_side.jpg)
-![Sensor unit bottom view](../img/sensor_bottom.jpg)
+<img src="../img/sensor_side.jpg" alt="Sensor unit side view" width="50%">
+<img src="../img/sensor_bottom.jpg" alt="Sensor unit bottom view" width="50%">
 
 Solder a two-conductor cable to the leads and hot-glue the joint to the base.
 
-![Sensor unit top view](../img/sensor_top_1.jpg)
-![Sensor unit top view](../img/sensor_top_2.jpg)
+<img src="../img/sensor_top_1.jpg" alt="Sensor unit top view" width="50%">
+<img src="../img/sensor_top_2.jpg" alt="Sensor unit top view" width="50%">
 
 Protect the USB module with clear heat shrink.
 
-![CH340E assembled](../img/ch340e_asmbly.jpg)
+<img src="../img/ch340e_asmbly.jpg" alt="CH340E assembled" width="50%">
 
 ## Quick Start
 
