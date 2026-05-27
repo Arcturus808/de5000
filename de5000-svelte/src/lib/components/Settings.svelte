@@ -1,8 +1,9 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
-	import { typeface, mainValueTypeface, readoutColor, labelColor, appTitleColor, cardTitleColor, theme, THEME_OPTIONS, getTypefaceCSS } from '$lib/stores/settings.js';
+	import { typeface, mainValueTypeface, readoutColor, labelColor, appTitleColor, cardTitleColor, theme, THEME_OPTIONS, getTypefaceCSS, ntfyEnabled, ntfyServerUrl, ntfyTopic, ntfyOncePerCrossing } from '$lib/stores/settings.js';
 	import TypefaceDropdown from './TypefaceDropdown.svelte';
 	import ColorDropdown from './ColorDropdown.svelte';
+	import { testNtfyConnection, getSubscribeUrl } from '$lib/utils/notify.js';
 
 	let open = false;
 	let displayFontOpen = false;
@@ -12,10 +13,30 @@
 	let appTitleColorOpen = false;
 	let cardTitleColorOpen = false;
 	let systemThemeQuery;
+	let ntfyError = '';
+	let ntfyTestResult = '';
+	let ntfyInfoOpen = false;
 
 	function toggle() {
 		open = !open;
+		if (!open && $ntfyEnabled) {
+			ntfyError = '';
+		}
 	}
+
+	async function handleTestNotification() {
+		ntfyTestResult = '';
+		ntfyError = '';
+		try {
+			await testNtfyConnection($ntfyServerUrl, $ntfyTopic);
+			ntfyTestResult = '✓ Sent';
+		} catch (e) {
+			ntfyTestResult = `✗ ${e.message || e}`;
+		}
+		setTimeout(() => (ntfyTestResult = ''), 5000);
+	}
+
+	$: subscribeUrl = getSubscribeUrl($ntfyServerUrl, $ntfyTopic);
 
 	function handleDisplayFontOpen() {
 		closeOtherDropdowns('displayFont');
@@ -216,6 +237,79 @@
 					on:close={() => (cardTitleColorOpen = false)}
 				/>
 			</div>
+			<div class="setting-group">
+				<div class="setting-label-row">
+					<label class="setting-label">Push Notifications</label>
+					<button type="button" class="info-btn" on:click={() => ntfyInfoOpen = !ntfyInfoOpen} title="How to set up push notifications">ⓘ</button>
+				</div>
+				<p class="setting-desc">Send alerts to your phone via ntfy</p>
+				{#if ntfyInfoOpen}
+					<div class="ntfy-info-box">
+						<p><strong>How it works:</strong> The app sends notifications to an ntfy server. You subscribe to a topic on your phone using the <a href="https://ntfy.sh" target="_blank" rel="noopener">ntfy app</a>.</p>
+						<p><strong>Quick start:</strong></p>
+						<ol>
+							<li>Install the ntfy app on your phone (<a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a> / <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iOS</a>)</li>
+							<li>Use the default server <code>https://ntfy.sh</code> (no setup needed) or run your own <a href="https://github.com/Arcturus808/ntfy-rs" target="_blank" rel="noopener">ntfy-rs</a> server on your LAN</li>
+							<li>Set the topic name below (both this app and your phone must use the same topic)</li>
+							<li>Enable push notifications and click <strong>Send Test</strong> to verify</li>
+						</ol>
+						<p><strong>Note:</strong> Using <code>https://ntfy.sh</code> means messages pass through a third-party server. For LAN-only notifications, run ntfy-rs locally and set the server URL to your PC's LAN address (e.g. <code>http://192.168.0.82:8090</code>).</p>
+					</div>
+				{/if}
+				<div class="ntfy-controls">
+					<label class="ntfy-toggle">
+						<input type="checkbox" checked={$ntfyEnabled}
+							on:change={() => ntfyEnabled.set(!$ntfyEnabled)} />
+						<span class="toggle-slider"></span>
+					</label>
+					<span class="ntfy-status" class:enabled={$ntfyEnabled}>
+						{$ntfyEnabled ? 'Enabled' : 'Disabled'}
+					</span>
+				</div>
+				{#if ntfyError}
+					<p class="ntfy-error">{ntfyError}</p>
+				{/if}
+				{#if $ntfyEnabled}
+					<div class="ntfy-config-row">
+						<div class="ntfy-field">
+							<label class="setting-label">Server URL</label>
+							<input type="text" class="ntfy-input" bind:value={$ntfyServerUrl}
+								placeholder="https://ntfy.sh" />
+						</div>
+						<div class="ntfy-field">
+							<label class="setting-label">Topic</label>
+							<input type="text" class="ntfy-input" bind:value={$ntfyTopic}
+								placeholder="de5000-alerts" />
+						</div>
+					</div>
+					{#if subscribeUrl}
+						<div class="ntfy-subscribe-info">
+							<label class="setting-label">Subscribe URL</label>
+							<div class="subscribe-url-row">
+								<code class="subscribe-url">{subscribeUrl}</code>
+								<button type="button" class="copy-btn" on:click={() => navigator.clipboard.writeText(subscribeUrl)} title="Copy URL">📋</button>
+							</div>
+							<p class="setting-desc">Open the ntfy app on your phone and subscribe to this URL</p>
+						</div>
+					{/if}
+					<div class="ntfy-once-row">
+						<label class="ntfy-toggle ntfy-once-toggle">
+							<input type="checkbox" checked={$ntfyOncePerCrossing}
+								on:change={() => ntfyOncePerCrossing.set(!$ntfyOncePerCrossing)} />
+							<span class="toggle-slider"></span>
+						</label>
+						<span class="ntfy-once-label">Notify once per threshold crossing</span>
+					</div>
+					<div class="ntfy-test-row">
+						<button type="button" class="ntfy-test-btn" on:click={handleTestNotification}>
+							Send Test Notification
+						</button>
+						{#if ntfyTestResult}
+							<span class="ntfy-test-result">{ntfyTestResult}</span>
+						{/if}
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}
@@ -346,10 +440,255 @@
 	}
 
 
+	.setting-label-row {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 4px;
+	}
+
+	.info-btn {
+		background: none;
+		border: 1px solid var(--border);
+		color: var(--muted-text);
+		font-size: 0.85em;
+		cursor: pointer;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s;
+		padding: 0;
+		line-height: 1;
+	}
+
+	.info-btn:hover {
+		border-color: var(--primary-accent-border);
+		color: var(--primary-accent);
+		background: var(--primary-accent-soft);
+	}
+
+	.ntfy-info-box {
+		background: var(--surface-muted);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		padding: 10px 12px;
+		margin-bottom: 10px;
+		font-size: 0.8em;
+		color: var(--muted-text);
+		line-height: 1.5;
+	}
+
+	.ntfy-info-box p {
+		margin: 0 0 6px 0;
+	}
+
+	.ntfy-info-box ol {
+		margin: 4px 0 6px 18px;
+		padding: 0;
+	}
+
+	.ntfy-info-box li {
+		margin-bottom: 3px;
+	}
+
+	.ntfy-info-box a {
+		color: var(--primary-accent);
+	}
+
+	.ntfy-info-box code {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 3px;
+		padding: 1px 4px;
+		font-size: 0.9em;
+	}
+
+	.ntfy-controls {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.ntfy-toggle {
+		position: relative;
+		display: inline-block;
+		width: 40px;
+		height: 22px;
+		cursor: pointer;
+	}
+
+	.ntfy-toggle input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.ntfy-toggle .toggle-slider {
+		position: absolute;
+		inset: 0;
+		background: var(--surface-muted);
+		border: 1px solid var(--border);
+		border-radius: 22px;
+		transition: all 0.3s;
+	}
+
+	.ntfy-toggle .toggle-slider::before {
+		content: '';
+		position: absolute;
+		width: 16px;
+		height: 16px;
+		left: 2px;
+		bottom: 2px;
+		background: var(--muted-text);
+		border-radius: 50%;
+		transition: transform 0.3s;
+	}
+
+	.ntfy-toggle input:checked + .toggle-slider {
+		background: var(--primary-accent-muted);
+		border-color: var(--primary-accent-border);
+	}
+
+	.ntfy-toggle input:checked + .toggle-slider::before {
+		transform: translateX(18px);
+		background: var(--primary-accent);
+	}
+
+	.ntfy-status {
+		font-size: 0.85em;
+		color: var(--muted-text);
+	}
+
+	.ntfy-status.enabled {
+		color: var(--primary-accent);
+	}
+
+	.ntfy-config-row {
+		display: flex;
+		gap: 12px;
+		margin-top: 12px;
+	}
+
+	.ntfy-field {
+		flex: 1;
+	}
+
+	.ntfy-input {
+		width: 100%;
+		padding: 6px 10px;
+		background: var(--surface-muted);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		color: var(--app-text);
+		font-size: 0.85em;
+		font-family: 'Courier New', monospace;
+	}
+
+	.ntfy-input:focus {
+		outline: none;
+		border-color: var(--primary-accent-border);
+	}
+
+	.ntfy-error {
+		color: var(--danger-accent);
+		font-size: 0.8em;
+		margin: 8px 0 0 0;
+		word-break: break-word;
+	}
+
+	.ntfy-subscribe-info {
+		margin-top: 12px;
+	}
+
+	.subscribe-url-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.subscribe-url {
+		flex: 1;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 6px 10px;
+		font-size: 0.85em;
+		color: var(--primary-accent);
+		font-family: 'Courier New', monospace;
+		word-break: break-all;
+	}
+
+	.copy-btn {
+		background: var(--surface-muted);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 1em;
+		padding: 4px 8px;
+		transition: all 0.2s;
+	}
+
+	.copy-btn:hover {
+		border-color: var(--primary-accent-border);
+		background: var(--primary-accent-soft);
+	}
+
+	.ntfy-once-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 10px;
+	}
+
+	.ntfy-once-toggle {
+		transform: scale(0.8);
+		transform-origin: left center;
+	}
+
+	.ntfy-once-label {
+		color: var(--muted-text);
+		font-size: 0.85em;
+	}
+
+	.ntfy-test-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 10px;
+	}
+
+	.ntfy-test-btn {
+		background: var(--primary-accent-muted);
+		border: 1px solid var(--primary-accent-border);
+		color: var(--primary-accent);
+		padding: 5px 12px;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 0.85em;
+		font-family: var(--readout-font);
+	}
+
+	.ntfy-test-btn:hover {
+		background: var(--primary-accent-border);
+	}
+
+	.ntfy-test-result {
+		font-size: 0.85em;
+		font-family: var(--readout-font);
+	}
+
 	@media (max-width: 768px) {
 		.modal {
 			min-width: auto;
 			margin: 20px;
+		}
+
+		.ntfy-config-row {
+			flex-direction: column;
+			gap: 8px;
 		}
 	}
 </style>

@@ -4,6 +4,8 @@
 	import { formatDisplayValue } from '$lib/utils/format.js';
 	import { exportData } from '$lib/utils/export.js';
 	import { alerts, checkAlerts, playAlertSound } from '$lib/stores/alerts.js';
+	import { ntfyEnabled, ntfyOncePerCrossing } from '$lib/stores/settings.js';
+	import { publishNotification, isNtfyRunning } from '$lib/utils/notify.js';
 	import AlertModal from './AlertModal.svelte';
 
 	let primaryCanvas;
@@ -42,6 +44,11 @@
 	// Alert checking
 	let alertActive = false;
 	let alertFlash = false;
+	let notifiedAlerts = new Set();
+
+	function formatAlertName(name) {
+		return name.replace(/([A-Z])/g, ' $1').trim().replace(/High$/, '≥').replace(/Low$/, '≤');
+	}
 
 	$: {
 		if ($lastMeasurement && $connected) {
@@ -53,9 +60,20 @@
 				alertFlash = true;
 				playAlertSound();
 				setTimeout(() => (alertFlash = false), 500);
+				if ($ntfyEnabled && isNtfyRunning()) {
+					const toNotify = $ntfyOncePerCrossing
+						? triggered.filter(t => !notifiedAlerts.has(t.name))
+						: triggered;
+					if (toNotify.length > 0) {
+						const details = toNotify.map(t => `${formatAlertName(t.name)} ${t.value} (threshold ${t.threshold})`).join(', ');
+						publishNotification('DE-5000 Alert', details, 'high');
+						toNotify.forEach(t => notifiedAlerts.add(t.name));
+					}
+				}
 			} else {
 				alertActive = false;
 				alertFlash = false;
+				notifiedAlerts.clear();
 			}
 		} else {
 			alertActive = false;

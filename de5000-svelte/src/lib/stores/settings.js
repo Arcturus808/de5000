@@ -179,3 +179,103 @@ function createCustomColorsStore() {
 }
 
 export const customColors = createCustomColorsStore();
+
+// ===== ntfy Push Notifications =====
+const NTFY_ENABLED_KEY = 'de5000-ntfy-enabled';
+const NTFY_SERVER_URL_KEY = 'de5000-ntfy-server-url';
+const NTFY_TOPIC_KEY = 'de5000-ntfy-topic';
+const NTFY_ONCE_KEY = 'de5000-ntfy-once-per-crossing';
+
+const DEFAULT_NTFY_ENABLED = false;
+const DEFAULT_NTFY_SERVER_URL = 'https://ntfy.sh';
+const DEFAULT_NTFY_TOPIC = 'de5000-alerts';
+const DEFAULT_NTFY_ONCE = true;
+
+function createNtfyEnabledStore() {
+	const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(NTFY_ENABLED_KEY) : null;
+	const initial = stored === 'true';
+
+	const { subscribe, set } = writable(initial);
+
+	return {
+		subscribe,
+		set(value) {
+			if (typeof localStorage !== 'undefined') {
+				if (value) {
+					localStorage.setItem(NTFY_ENABLED_KEY, 'true');
+				} else {
+					localStorage.removeItem(NTFY_ENABLED_KEY);
+				}
+			}
+			set(value);
+		}
+	};
+}
+
+function createNtfyServerUrlStore() {
+	const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(NTFY_SERVER_URL_KEY) : null;
+	const initial = stored ?? DEFAULT_NTFY_SERVER_URL;
+
+	const { subscribe, set } = writable(initial);
+
+	return {
+		subscribe,
+		set(value) {
+			if (typeof localStorage !== 'undefined') {
+				if (value === DEFAULT_NTFY_SERVER_URL) {
+					localStorage.removeItem(NTFY_SERVER_URL_KEY);
+				} else {
+					localStorage.setItem(NTFY_SERVER_URL_KEY, value);
+				}
+			}
+			set(value);
+		}
+	};
+}
+
+function createNtfyTopicStore() {
+	const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(NTFY_TOPIC_KEY) : null;
+	const initial = stored ?? DEFAULT_NTFY_TOPIC;
+
+	const { subscribe, set } = writable(initial);
+
+	return {
+		subscribe,
+		set(value) {
+			if (typeof localStorage !== 'undefined') {
+				if (value === DEFAULT_NTFY_TOPIC) {
+					localStorage.removeItem(NTFY_TOPIC_KEY);
+				} else {
+					localStorage.setItem(NTFY_TOPIC_KEY, value);
+				}
+			}
+			set(value);
+		}
+	};
+}
+
+function createNtfyOnceStore() {
+	const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(NTFY_ONCE_KEY) : null;
+	const initial = stored !== null ? stored === 'true' : DEFAULT_NTFY_ONCE;
+
+	const { subscribe, set } = writable(initial);
+
+	return {
+		subscribe,
+		set(value) {
+			if (typeof localStorage !== 'undefined') {
+				if (value === DEFAULT_NTFY_ONCE) {
+					localStorage.removeItem(NTFY_ONCE_KEY);
+				} else {
+					localStorage.setItem(NTFY_ONCE_KEY, String(value));
+				}
+			}
+			set(value);
+		}
+	};
+}
+
+export const ntfyEnabled = createNtfyEnabledStore();
+export const ntfyServerUrl = createNtfyServerUrlStore();
+export const ntfyTopic = createNtfyTopicStore();
+export const ntfyOncePerCrossing = createNtfyOnceStore();
