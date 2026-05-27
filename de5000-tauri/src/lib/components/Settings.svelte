@@ -311,6 +311,7 @@
 						</ol>
 						<p><strong>Note:</strong> The ntfy server runs on your PC and is only accessible over your local network. No data leaves your LAN.</p>
 					<p><strong>Apple (iOS) users:</strong> iOS push notifications use Apple's APNs, which requires an internet connection and a call to the ntfy.sh server — even though your ntfy server is local. The notification content itself stays on your LAN; only a small delivery trigger passes through ntfy.sh. Android devices receive notifications directly over your LAN with no internet required.</p>
+					<p><strong>Windows Firewall:</strong> On first use, Windows may prompt you to allow network access. Check <strong>Private networks</strong> (your LAN) and uncheck <strong>Public networks</strong>, then click <strong>Allow</strong>. If you missed the prompt, see the <a href="https://github.com/Arcturus808/de5000#windows-firewall" target="_blank" rel="noopener">README</a> for manual firewall rules.</p>
 					</div>
 				{/if}
 				<div class="setting-label-row">

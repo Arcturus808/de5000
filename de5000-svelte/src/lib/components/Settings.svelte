@@ -290,6 +290,7 @@
 							<li>Enable push notifications and click <strong>Send Test</strong> to verify</li>
 						</ol>
 						<p><strong>Note:</strong> Using <code>https://ntfy.sh</code> means messages pass through a third-party server. For LAN-only notifications, run ntfy-rs locally and set the server URL to your PC's LAN address (e.g. <code>http://192.168.0.82:8090</code>).</p>
+						<p><strong>Troubleshooting:</strong> If running your own ntfy-rs server and notifications aren't reaching your phone, check your Windows Firewall settings — the server needs inbound TCP access on its port. See the <a href="https://github.com/Arcturus808/de5000#windows-firewall" target="_blank" rel="noopener">README</a> for details.</p>
 					</div>
 				{/if}
 				<div class="setting-label-row">
