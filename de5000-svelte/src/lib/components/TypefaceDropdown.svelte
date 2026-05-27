@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { TYPEFACE_OPTIONS } from '$lib/stores/settings.js';
 
 	export let store;
@@ -8,16 +8,27 @@
 	const dispatch = createEventDispatcher();
 
 	let triggerEl;
+	let menuEl;
+	let menuStyle = '';
 
 	$: selectedOption = TYPEFACE_OPTIONS.find((o) => o.label === $store) || TYPEFACE_OPTIONS[0];
 
-	function toggle() {
+	async function toggle() {
 		if (isOpen) {
 			isOpen = false;
 			dispatch('close');
 		} else {
 			isOpen = true;
 			dispatch('open');
+			await tick();
+			requestAnimationFrame(positionMenu);
+		}
+	}
+
+	function positionMenu() {
+		if (triggerEl && menuEl) {
+			const rect = triggerEl.getBoundingClientRect();
+			menuStyle = `position:fixed;top:${rect.bottom}px;left:${rect.left}px;width:${rect.width}px;`;
 		}
 	}
 
@@ -58,6 +69,22 @@
 		triggerEl?.focus();
 		dispatch('close');
 	}
+
+	function handleWindowClick(e) {
+		if (!isOpen) return;
+		const el = document.querySelector('.dropdown.open');
+		if (el && !el.contains(e.target)) {
+			isOpen = false;
+			triggerEl?.focus();
+			dispatch('close');
+		}
+	}
+
+	$: if (isOpen) {
+		window.addEventListener('click', handleWindowClick, true);
+		} else {
+			window.removeEventListener('click', handleWindowClick, true);
+		}
 </script>
 
 <div class="dropdown" class:open={isOpen} on:keydown={handleKeydown} on:focusout={handleFocusout}>
@@ -72,8 +99,7 @@
 		<span class="dropdown-arrow">▾</span>
 	</button>
 	{#if isOpen}
-		<div class="dropdown-backdrop" on:click|stopPropagation={handleBackdropClick}></div>
-		<div class="dropdown-menu">
+		<div class="dropdown-menu" bind:this={menuEl} style={menuStyle}>
 			{#each TYPEFACE_OPTIONS as option}
 				<button
 					class="dropdown-item"
@@ -92,15 +118,6 @@
 <style>
 	.dropdown {
 		position: relative;
-	}
-
-	.dropdown-backdrop {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 5;
 	}
 
 	.dropdown-trigger {
@@ -136,15 +153,10 @@
 	}
 
 	.dropdown-menu {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
 		background: var(--option-bg);
 		border: 1px solid var(--primary-accent-border);
-		border-top: none;
 		border-radius: 0 0 8px 8px;
-		z-index: 6;
+		z-index: 10000;
 		overflow: hidden;
 	}
 

@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { COLOR_PALETTES, customColors } from '$lib/stores/settings.js';
 
 	export let store;
@@ -41,15 +41,16 @@
 		}
 	}
 
-	function toggle() {
+	async function toggle() {
 		if (isOpen) {
 			isOpen = false;
 			dispatch('close');
 		} else {
 			isOpen = true;
 			showAddForm = false;
-			positionDropdown();
 			dispatch('open');
+			await tick();
+			requestAnimationFrame(positionDropdown);
 		}
 	}
 
@@ -97,6 +98,23 @@
 		dispatch('close');
 	}
 
+	function handleWindowClick(e) {
+		if (!isOpen) return;
+		const el = document.querySelector('.color-dropdown.open');
+		if (el && !el.contains(e.target)) {
+			isOpen = false;
+			showAddForm = false;
+			triggerEl?.focus();
+			dispatch('close');
+		}
+	}
+
+	$: if (isOpen) {
+		window.addEventListener('click', handleWindowClick, true);
+	} else {
+		window.removeEventListener('click', handleWindowClick, true);
+	}
+
 	function handleCustomColorChange(e) {
 		customHexInput = e.target.value;
 	}
@@ -133,7 +151,6 @@
 		<span class="dropdown-arrow">▾</span>
 	</button>
 	{#if isOpen}
-		<div class="dropdown-backdrop" on:click|stopPropagation={handleBackdropClick}></div>
 		<div class="dropdown-menu" class:above={openAbove} bind:this={dropdownEl} style={menuStyle}>
 			{#each Object.entries(COLOR_PALETTES) as [group, colors]}
 				<div class="palette-group">
@@ -197,15 +214,6 @@
 <style>
 	.color-dropdown {
 		position: relative;
-	}
-
-	.dropdown-backdrop {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 5;
 	}
 
 	.dropdown-trigger {

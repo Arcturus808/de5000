@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { COLOR_PALETTES, customColors } from '$lib/stores/settings.js';
 
 	export let store;
@@ -41,15 +41,16 @@
 		}
 	}
 
-	function toggle() {
+	async function toggle() {
 		if (isOpen) {
 			isOpen = false;
 			dispatch('close');
 		} else {
 			isOpen = true;
 			showAddForm = false;
-			positionDropdown();
 			dispatch('open');
+			await tick();
+			requestAnimationFrame(positionDropdown);
 		}
 	}
 
@@ -97,6 +98,23 @@
 		dispatch('close');
 	}
 
+	function handleWindowClick(e) {
+		if (!isOpen) return;
+		const el = document.querySelector('.color-dropdown.open');
+		if (el && !el.contains(e.target)) {
+			isOpen = false;
+			showAddForm = false;
+			triggerEl?.focus();
+			dispatch('close');
+		}
+	}
+
+	$: if (isOpen) {
+		window.addEventListener('click', handleWindowClick, true);
+	} else {
+		window.removeEventListener('click', handleWindowClick, true);
+	}
+
 	function handleCustomColorChange(e) {
 		customHexInput = e.target.value;
 	}
@@ -119,7 +137,7 @@
 	}
 </script>
 
-<div class="color-dropdown" class:open={isOpen} on:keydown={handleKeydown} on:focusout={handleFocusout} on:click|stopPropagation>
+<div class="color-dropdown" class:open={isOpen} on:keydown={handleKeydown} on:focusout={handleFocusout}>
 	<button
 		bind:this={triggerEl}
 		class="dropdown-trigger"

@@ -15,6 +15,37 @@
 	let ntfyStatus = { running: false, port: 8090, topic: 'de5000-alerts', subscribe_url: '' };
 	let ntfyError = '';
 	let ntfyTestResult = '';
+	let ntfyInfoOpen = false;
+	let ntfyPortHistory = [];
+	let ntfyTopicHistory = [];
+
+	const PORT_HISTORY_KEY = 'de5000-ntfy-port-history';
+	const TOPIC_HISTORY_KEY = 'de5000-ntfy-topic-history';
+
+	function loadNtfyHistory() {
+		try {
+			const ports = JSON.parse(localStorage.getItem(PORT_HISTORY_KEY) || '[]');
+			ntfyPortHistory = [...new Set(ports)];
+		} catch { ntfyPortHistory = []; }
+		try {
+			const topics = JSON.parse(localStorage.getItem(TOPIC_HISTORY_KEY) || '[]');
+			ntfyTopicHistory = [...new Set(topics)];
+		} catch { ntfyTopicHistory = []; }
+	}
+
+	function savePortToHistory(port) {
+		if (!port) return;
+		const updated = [port, ...ntfyPortHistory.filter(p => p !== port)].slice(0, 10);
+		ntfyPortHistory = updated;
+		localStorage.setItem(PORT_HISTORY_KEY, JSON.stringify(updated));
+	}
+
+	function saveTopicToHistory(topic) {
+		if (!topic) return;
+		const updated = [topic, ...ntfyTopicHistory.filter(t => t !== topic)].slice(0, 10);
+		ntfyTopicHistory = updated;
+		localStorage.setItem(TOPIC_HISTORY_KEY, JSON.stringify(updated));
+	}
 
 	function toggle() {
 		open = !open;
@@ -35,6 +66,8 @@
 	}
 
 	async function handleNtfyConfigChange() {
+		savePortToHistory($ntfyPort);
+		saveTopicToHistory($ntfyTopic);
 		if (ntfyStatus.running) {
 			try { ntfyStatus = await startNtfy($ntfyPort, $ntfyTopic); } catch (e) {}
 		}
@@ -106,6 +139,9 @@
 
 	onMount(async () => {
 		applyTheme($theme);
+		loadNtfyHistory();
+		savePortToHistory($ntfyPort);
+		saveTopicToHistory($ntfyTopic);
 		if (systemDark) {
 			systemDark.addEventListener('change', handleSystemThemeChange);
 		}
@@ -168,96 +204,116 @@
 
 {#if open}
 	<div class="overlay" on:click={handleClose}>
-		<div class="modal" on:click|stopPropagation={closeAllDropdowns}>
+		<div class="modal" on:click|stopPropagation>
 			<div class="modal-header">
 				<h2>Settings</h2>
 				<button class="close-btn" on:click={handleClose}>✕</button>
 			</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Display Typeface</label>
-				<p class="setting-desc">Labels, titles, and other UI text</p>
-				<TypefaceDropdown
-					store={typeface}
-					bind:isOpen={displayFontOpen}
-					on:open={handleDisplayFontOpen}
-					on:close={handleDisplayFontClose}
-				/>
-			</div>
+			<div class="settings-columns">
+				<div class="settings-column">
+					<div class="setting-group">
+						<label class="setting-label">Theme</label>
+						<p class="setting-desc">Dark, light, or follow system preference</p>
+						<div class="theme-toggle">
+							{#each THEME_OPTIONS as option}
+								<button
+									class="theme-btn"
+									class:active={$theme === option.value}
+									on:click={() => theme.set(option.value)}
+								>
+									{option.label}
+								</button>
+							{/each}
+						</div>
+					</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Main Value Typeface</label>
-				<p class="setting-desc">Primary &amp; secondary measurement readouts</p>
-				<TypefaceDropdown
-					store={mainValueTypeface}
-					bind:isOpen={mainValueFontOpen}
-					on:open={handleMainValueFontOpen}
-					on:close={handleMainValueFontClose}
-				/>
-			</div>
-			<div class="setting-group">
-				<label class="setting-label">Readout Color</label>
-				<p class="setting-desc">Measurement values, titles, and highlights</p>
-				<ColorDropdown
-					store={readoutColor}
-					bind:isOpen={readoutColorOpen}
-					on:open={() => closeOtherDropdowns('readoutColor')}
-					on:close={() => (readoutColorOpen = false)}
-				/>
-			</div>
+					<div class="setting-group">
+						<label class="setting-label">Display Typeface</label>
+						<p class="setting-desc">Labels, titles, and other UI text</p>
+						<TypefaceDropdown
+							store={typeface}
+							bind:isOpen={displayFontOpen}
+							on:open={handleDisplayFontOpen}
+							on:close={handleDisplayFontClose}
+						/>
+					</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Label Color</label>
-				<p class="setting-desc">Labels, units, and secondary text</p>
-				<ColorDropdown
-					store={labelColor}
-					bind:isOpen={labelColorOpen}
-					on:open={() => closeOtherDropdowns('labelColor')}
-					on:close={() => (labelColorOpen = false)}
-				/>
-			</div>
-			<div class="setting-group">
-				<label class="setting-label">App Title Color</label>
-				<p class="setting-desc">Main header title</p>
-				<ColorDropdown
-					store={appTitleColor}
-					bind:isOpen={appTitleColorOpen}
-					on:open={() => closeOtherDropdowns('appTitleColor')}
-					on:close={() => (appTitleColorOpen = false)}
-				/>
-			</div>
+					<div class="setting-group">
+						<label class="setting-label">Main Value Typeface</label>
+						<p class="setting-desc">Primary &amp; secondary measurement readouts</p>
+						<TypefaceDropdown
+							store={mainValueTypeface}
+							bind:isOpen={mainValueFontOpen}
+							on:open={handleMainValueFontOpen}
+							on:close={handleMainValueFontClose}
+						/>
+					</div>
+				</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Card Title Color</label>
-				<p class="setting-desc">Section and card headings</p>
-				<ColorDropdown
-					store={cardTitleColor}
-					bind:isOpen={cardTitleColorOpen}
-					on:open={() => closeOtherDropdowns('cardTitleColor')}
-					on:close={() => (cardTitleColorOpen = false)}
-				/>
-			</div>
+				<div class="settings-column">
+					<div class="setting-group">
+						<label class="setting-label">Readout Color</label>
+						<p class="setting-desc">Measurement values, titles, and highlights</p>
+						<ColorDropdown
+							store={readoutColor}
+							bind:isOpen={readoutColorOpen}
+							on:open={() => closeOtherDropdowns('readoutColor')}
+							on:close={() => (readoutColorOpen = false)}
+						/>
+					</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Theme</label>
-				<p class="setting-desc">Dark, light, or follow system preference</p>
-				<div class="theme-toggle">
-					{#each THEME_OPTIONS as option}
-						<button
-							class="theme-btn"
-							class:active={$theme === option.value}
-							on:click={() => theme.set(option.value)}
-						>
-							{option.label}
-						</button>
-					{/each}
+					<div class="setting-group">
+						<label class="setting-label">Label Color</label>
+						<p class="setting-desc">Labels, units, and secondary text</p>
+						<ColorDropdown
+							store={labelColor}
+							bind:isOpen={labelColorOpen}
+							on:open={() => closeOtherDropdowns('labelColor')}
+							on:close={() => (labelColorOpen = false)}
+						/>
+					</div>
+					<div class="setting-group">
+						<label class="setting-label">App Title Color</label>
+						<p class="setting-desc">Main header title</p>
+						<ColorDropdown
+							store={appTitleColor}
+							bind:isOpen={appTitleColorOpen}
+							on:open={() => closeOtherDropdowns('appTitleColor')}
+							on:close={() => (appTitleColorOpen = false)}
+						/>
+					</div>
+
+					<div class="setting-group">
+						<label class="setting-label">Card Title Color</label>
+						<p class="setting-desc">Section and card headings</p>
+						<ColorDropdown
+							store={cardTitleColor}
+							bind:isOpen={cardTitleColorOpen}
+							on:open={() => closeOtherDropdowns('cardTitleColor')}
+							on:close={() => (cardTitleColorOpen = false)}
+						/>
+					</div>
 				</div>
 			</div>
 
 			<div class="setting-group">
-				<label class="setting-label">Push Notifications</label>
-				<p class="setting-desc">Send alerts to your phone via ntfy</p>
-				<div class="ntfy-controls">
+				{#if ntfyInfoOpen}
+					<div class="ntfy-info-popover">
+						<p><strong>How it works:</strong> The app runs a built-in ntfy server. You subscribe to a topic on your phone using the <a href="https://ntfy.sh" target="_blank" rel="noopener">ntfy app</a> to receive push notifications over your LAN.</p>
+						<p><strong>Quick start:</strong></p>
+						<ol>
+							<li>Install the ntfy app on your phone (<a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a> / <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iOS</a>)</li>
+							<li>Enable push notifications — the embedded server starts automatically</li>
+							<li>Set the topic name (both this app and your phone must use the same topic)</li>
+							<li>On your phone, subscribe to the URL shown below{#if ntfyStatus.subscribe_url} (e.g. <code>{ntfyStatus.subscribe_url}</code>){/if}</li>
+							<li>Click <strong>Send Test</strong> to verify</li>
+						</ol>
+						<p><strong>Note:</strong> The ntfy server runs on your PC and is only accessible over your local network. No data leaves your LAN.</p>
+					<p><strong>Apple (iOS) users:</strong> iOS push notifications use Apple's APNs, which requires an internet connection and a call to the ntfy.sh server — even though your ntfy server is local. The notification content itself stays on your LAN; only a small delivery trigger passes through ntfy.sh. Android devices receive notifications directly over your LAN with no internet required.</p>
+					</div>
+				{/if}
+				<div class="setting-label-row">
 					<label class="ntfy-toggle">
 						<input type="checkbox" checked={$ntfyEnabled}
 							on:change={async () => {
@@ -281,9 +337,11 @@
 						}} />
 						<span class="toggle-slider"></span>
 					</label>
+					<label class="setting-label" title="Send alerts to your phone via ntfy">Push Notifications</label>
 					<span class="ntfy-status" class:running={ntfyStatus.running}>
 						{ntfyStatus.running ? 'Server running' : 'Server off'}
 					</span>
+					<button type="button" class="info-btn" on:click={() => ntfyInfoOpen = !ntfyInfoOpen} title="How to set up push notifications">ⓘ</button>
 				</div>
 				{#if ntfyError}
 					<p class="ntfy-error">{ntfyError}</p>
@@ -302,13 +360,25 @@
 					<div class="ntfy-config-row">
 						<div class="ntfy-field">
 							<label class="setting-label">Port</label>
-							<input type="number" class="ntfy-input" bind:value={$ntfyPort} min="1024" max="65535"
+							<input type="text" inputmode="numeric" class="ntfy-input" bind:value={$ntfyPort}
+								list="ntfy-port-list"
 								on:change={handleNtfyConfigChange} />
+							<datalist id="ntfy-port-list">
+								{#each ntfyPortHistory as port}
+									<option value={port} />
+								{/each}
+							</datalist>
 						</div>
 						<div class="ntfy-field">
 							<label class="setting-label">Topic</label>
 							<input type="text" class="ntfy-input" bind:value={$ntfyTopic}
+								list="ntfy-topic-list"
 								on:change={handleNtfyConfigChange} />
+							<datalist id="ntfy-topic-list">
+								{#each ntfyTopicHistory as topic}
+									<option value={topic} />
+								{/each}
+							</datalist>
 						</div>
 					</div>
 					<div class="ntfy-once-row">
@@ -355,15 +425,14 @@
 
 	.overlay {
 		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+		inset: 0;
 		background: var(--modal-overlay);
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		z-index: 9999;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		padding: 40px 0;
+		overflow-y: auto;
 	}
 
 	.modal {
@@ -371,12 +440,25 @@
 		border: 1px solid var(--primary-accent-panel);
 		border-radius: 12px;
 		padding: 25px;
-		min-width: 420px;
-		max-width: 90vw;
-		max-height: 85vh;
+		width: min(720px, 90vw);
+		margin: 0 auto;
+		max-height: 95vh;
 		overflow-y: auto;
+		scrollbar-gutter: stable;
 		box-shadow: var(--shadow);
 		font-family: 'Open Sans', sans-serif;
+	}
+
+	.settings-columns {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+
+	.settings-column {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
 	}
 
 	.modal-header {
@@ -412,6 +494,7 @@
 
 	.setting-group {
 		margin-bottom: 20px;
+		position: relative;
 	}
 
 	.setting-label {
@@ -459,15 +542,103 @@
 
 	@media (max-width: 768px) {
 		.modal {
-			min-width: auto;
+			width: 90vw;
 			margin: 20px;
+		}
+
+		.settings-columns {
+			grid-template-columns: 1fr;
+		}
+
+		.ntfy-config-row {
+			flex-direction: column;
+			gap: 8px;
 		}
 	}
 
-	.ntfy-controls {
+	.setting-label-row {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+	}
+
+	.info-btn {
+		background: none;
+		border: 1px solid var(--border);
+		color: var(--muted-text);
+		cursor: pointer;
+		font-size: 0.9em;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		justify-content: center;
+		padding: 0;
+		line-height: 1;
+	}
+
+	.info-btn:hover {
+		border-color: var(--primary-accent-border);
+		color: var(--primary-accent);
+		background: var(--primary-accent-soft);
+	}
+
+	.ntfy-info-popover {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 100%;
+		background: var(--modal-bg);
+		border: 1px solid var(--primary-accent-border);
+		border-radius: 8px;
+		padding: 12px 14px;
+		margin-bottom: 6px;
+		font-size: 0.8em;
+		color: var(--muted-text);
+		line-height: 1.5;
+		text-align: left;
+		word-break: break-word;
+		overflow-wrap: break-word;
+		z-index: 10000;
+		box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+	}
+
+	.ntfy-info-popover p {
+		margin: 0 0 6px 0;
+	}
+
+	.ntfy-info-popover ol {
+		margin: 4px 0 6px 18px;
+		padding: 0;
+	}
+
+	.ntfy-info-popover li {
+		margin-bottom: 3px;
+	}
+
+	.ntfy-info-popover a {
+		color: var(--primary-accent);
+		word-break: break-all;
+	}
+
+	.ntfy-info-popover code {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 3px;
+		padding: 1px 4px;
+		font-size: 0.9em;
+		word-break: break-all;
+	}
+
+	.ntfy-status {
+		font-size: 0.85em;
+		color: var(--muted-text);
+		line-height: 1;
+	}
+
+	.ntfy-status.running {
+		color: var(--primary-accent);
 	}
 
 	.ntfy-toggle {
@@ -513,15 +684,6 @@
 	.ntfy-toggle input:checked + .toggle-slider::before {
 		transform: translateX(18px);
 		background: var(--primary-accent);
-	}
-
-	.ntfy-status {
-		font-size: 0.85em;
-		color: var(--muted-text);
-	}
-
-	.ntfy-status.running {
-		color: var(--primary-accent);
 	}
 
 	.ntfy-subscribe-info {

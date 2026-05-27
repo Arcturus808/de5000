@@ -16,6 +16,36 @@
 	let ntfyError = '';
 	let ntfyTestResult = '';
 	let ntfyInfoOpen = false;
+	let ntfyServerHistory = [];
+	let ntfyTopicHistory = [];
+
+	const SERVER_HISTORY_KEY = 'de5000-ntfy-server-history';
+	const TOPIC_HISTORY_KEY = 'de5000-ntfy-topic-history';
+
+	function loadNtfyHistory() {
+		try {
+			const servers = JSON.parse(localStorage.getItem(SERVER_HISTORY_KEY) || '[]');
+			ntfyServerHistory = [...new Set(servers)];
+		} catch { ntfyServerHistory = []; }
+		try {
+			const topics = JSON.parse(localStorage.getItem(TOPIC_HISTORY_KEY) || '[]');
+			ntfyTopicHistory = [...new Set(topics)];
+		} catch { ntfyTopicHistory = []; }
+	}
+
+	function saveServerToHistory(url) {
+		if (!url) return;
+		const updated = [url, ...ntfyServerHistory.filter(s => s !== url)].slice(0, 10);
+		ntfyServerHistory = updated;
+		localStorage.setItem(SERVER_HISTORY_KEY, JSON.stringify(updated));
+	}
+
+	function saveTopicToHistory(topic) {
+		if (!topic) return;
+		const updated = [topic, ...ntfyTopicHistory.filter(t => t !== topic)].slice(0, 10);
+		ntfyTopicHistory = updated;
+		localStorage.setItem(TOPIC_HISTORY_KEY, JSON.stringify(updated));
+	}
 
 	function toggle() {
 		open = !open;
@@ -94,6 +124,9 @@
 		systemThemeQuery = window.matchMedia('(prefers-color-scheme: light)');
 		systemThemeQuery.addEventListener('change', handleSystemThemeChange);
 		applyTheme($theme);
+		loadNtfyHistory();
+		saveServerToHistory($ntfyServerUrl);
+		saveTopicToHistory($ntfyTopic);
 	});
 
 	onDestroy(() => {
@@ -152,99 +185,102 @@
 
 {#if open}
 	<div class="overlay" on:click={handleClose}>
-		<div class="modal" on:click|stopPropagation={closeAllDropdowns}>
+		<div class="modal" on:click|stopPropagation>
 			<div class="modal-header">
 				<h2>Settings</h2>
 				<button class="close-btn" on:click={handleClose}>✕</button>
 			</div>
 
-			<div class="setting-group">
-				<label class="setting-label">Appearance</label>
-				<p class="setting-desc">Application color theme</p>
-				<div class="theme-toggle" role="group" aria-label="Application theme">
-					{#each THEME_OPTIONS as option}
-						<button
-							type="button"
-							class:selected={$theme === option.value}
-							on:click={() => theme.set(option.value)}
-						>
-							{option.label}
-						</button>
-					{/each}
+			<div class="settings-columns">
+				<div class="settings-column">
+					<div class="setting-group">
+						<label class="setting-label">Appearance</label>
+						<p class="setting-desc">Application color theme</p>
+						<div class="theme-toggle" role="group" aria-label="Application theme">
+							{#each THEME_OPTIONS as option}
+								<button
+									type="button"
+								class:selected={$theme === option.value}
+								on:click={() => theme.set(option.value)}
+							>
+									{option.label}
+								</button>
+							{/each}
+						</div>
+					</div>
+
+					<div class="setting-group">
+						<label class="setting-label">Display Typeface</label>
+						<p class="setting-desc">Labels, titles, and other UI text</p>
+						<TypefaceDropdown
+							store={typeface}
+							bind:isOpen={displayFontOpen}
+							on:open={handleDisplayFontOpen}
+							on:close={handleDisplayFontClose}
+						/>
+					</div>
+
+					<div class="setting-group">
+						<label class="setting-label">Main Value Typeface</label>
+						<p class="setting-desc">Primary &amp; secondary measurement readouts</p>
+						<TypefaceDropdown
+							store={mainValueTypeface}
+							bind:isOpen={mainValueFontOpen}
+							on:open={handleMainValueFontOpen}
+							on:close={handleMainValueFontClose}
+						/>
+					</div>
+				</div>
+
+				<div class="settings-column">
+					<div class="setting-group">
+						<label class="setting-label">Readout Color</label>
+						<p class="setting-desc">Measurement values, titles, and highlights</p>
+						<ColorDropdown
+							store={readoutColor}
+							bind:isOpen={readoutColorOpen}
+							on:open={() => closeOtherDropdowns('readoutColor')}
+							on:close={() => (readoutColorOpen = false)}
+						/>
+					</div>
+
+					<div class="setting-group">
+						<label class="setting-label">Label Color</label>
+						<p class="setting-desc">Labels, units, and secondary text</p>
+						<ColorDropdown
+							store={labelColor}
+							bind:isOpen={labelColorOpen}
+							on:open={() => closeOtherDropdowns('labelColor')}
+							on:close={() => (labelColorOpen = false)}
+						/>
+					</div>
+					<div class="setting-group">
+						<label class="setting-label">App Title Color</label>
+						<p class="setting-desc">Main header title</p>
+						<ColorDropdown
+							store={appTitleColor}
+							bind:isOpen={appTitleColorOpen}
+							on:open={() => closeOtherDropdowns('appTitleColor')}
+							on:close={() => (appTitleColorOpen = false)}
+						/>
+					</div>
+
+					<div class="setting-group">
+						<label class="setting-label">Card Title Color</label>
+						<p class="setting-desc">Section and card headings</p>
+						<ColorDropdown
+							store={cardTitleColor}
+							bind:isOpen={cardTitleColorOpen}
+							on:open={() => closeOtherDropdowns('cardTitleColor')}
+							on:close={() => (cardTitleColorOpen = false)}
+						/>
+					</div>
 				</div>
 			</div>
 
 			<div class="setting-group">
-				<label class="setting-label">Display Typeface</label>
-				<p class="setting-desc">Labels, titles, and other UI text</p>
-				<TypefaceDropdown
-					store={typeface}
-					bind:isOpen={displayFontOpen}
-					on:open={handleDisplayFontOpen}
-					on:close={handleDisplayFontClose}
-				/>
-			</div>
-
-			<div class="setting-group">
-				<label class="setting-label">Main Value Typeface</label>
-				<p class="setting-desc">Primary &amp; secondary measurement readouts</p>
-				<TypefaceDropdown
-					store={mainValueTypeface}
-					bind:isOpen={mainValueFontOpen}
-					on:open={handleMainValueFontOpen}
-					on:close={handleMainValueFontClose}
-				/>
-			</div>
-			<div class="setting-group">
-				<label class="setting-label">Readout Color</label>
-				<p class="setting-desc">Measurement values, titles, and highlights</p>
-				<ColorDropdown
-					store={readoutColor}
-					bind:isOpen={readoutColorOpen}
-					on:open={() => closeOtherDropdowns('readoutColor')}
-					on:close={() => (readoutColorOpen = false)}
-				/>
-			</div>
-
-			<div class="setting-group">
-				<label class="setting-label">Label Color</label>
-				<p class="setting-desc">Labels, units, and secondary text</p>
-				<ColorDropdown
-					store={labelColor}
-					bind:isOpen={labelColorOpen}
-					on:open={() => closeOtherDropdowns('labelColor')}
-					on:close={() => (labelColorOpen = false)}
-				/>
-			</div>
-			<div class="setting-group">
-				<label class="setting-label">App Title Color</label>
-				<p class="setting-desc">Main header title</p>
-				<ColorDropdown
-					store={appTitleColor}
-					bind:isOpen={appTitleColorOpen}
-					on:open={() => closeOtherDropdowns('appTitleColor')}
-					on:close={() => (appTitleColorOpen = false)}
-				/>
-			</div>
-
-			<div class="setting-group">
-				<label class="setting-label">Card Title Color</label>
-				<p class="setting-desc">Section and card headings</p>
-				<ColorDropdown
-					store={cardTitleColor}
-					bind:isOpen={cardTitleColorOpen}
-					on:open={() => closeOtherDropdowns('cardTitleColor')}
-					on:close={() => (cardTitleColorOpen = false)}
-				/>
-			</div>
-			<div class="setting-group">
-				<div class="setting-label-row">
-					<label class="setting-label">Push Notifications</label>
-					<button type="button" class="info-btn" on:click={() => ntfyInfoOpen = !ntfyInfoOpen} title="How to set up push notifications">ⓘ</button>
-				</div>
-				<p class="setting-desc">Send alerts to your phone via ntfy</p>
 				{#if ntfyInfoOpen}
-					<div class="ntfy-info-box">
+					<div class="ntfy-info-popover">
 						<p><strong>How it works:</strong> The app sends notifications to an ntfy server. You subscribe to a topic on your phone using the <a href="https://ntfy.sh" target="_blank" rel="noopener">ntfy app</a>.</p>
 						<p><strong>Quick start:</strong></p>
 						<ol>
@@ -256,15 +292,14 @@
 						<p><strong>Note:</strong> Using <code>https://ntfy.sh</code> means messages pass through a third-party server. For LAN-only notifications, run ntfy-rs locally and set the server URL to your PC's LAN address (e.g. <code>http://192.168.0.82:8090</code>).</p>
 					</div>
 				{/if}
-				<div class="ntfy-controls">
+				<div class="setting-label-row">
 					<label class="ntfy-toggle">
 						<input type="checkbox" checked={$ntfyEnabled}
 							on:change={() => ntfyEnabled.set(!$ntfyEnabled)} />
 						<span class="toggle-slider"></span>
 					</label>
-					<span class="ntfy-status" class:enabled={$ntfyEnabled}>
-						{$ntfyEnabled ? 'Enabled' : 'Disabled'}
-					</span>
+					<label class="setting-label" title="Send alerts to your phone via ntfy">Push Notifications</label>
+					<button type="button" class="info-btn" on:click={() => ntfyInfoOpen = !ntfyInfoOpen} title="How to set up push notifications">ⓘ</button>
 				</div>
 				{#if ntfyError}
 					<p class="ntfy-error">{ntfyError}</p>
@@ -274,12 +309,26 @@
 						<div class="ntfy-field">
 							<label class="setting-label">Server URL</label>
 							<input type="text" class="ntfy-input" bind:value={$ntfyServerUrl}
-								placeholder="https://ntfy.sh" />
+								list="ntfy-server-list"
+								placeholder="https://ntfy.sh"
+								on:change={() => saveServerToHistory($ntfyServerUrl)} />
+							<datalist id="ntfy-server-list">
+								{#each ntfyServerHistory as server}
+									<option value={server} />
+								{/each}
+							</datalist>
 						</div>
 						<div class="ntfy-field">
 							<label class="setting-label">Topic</label>
 							<input type="text" class="ntfy-input" bind:value={$ntfyTopic}
-								placeholder="de5000-alerts" />
+								list="ntfy-topic-list"
+								placeholder="de5000-alerts"
+								on:change={() => saveTopicToHistory($ntfyTopic)} />
+							<datalist id="ntfy-topic-list">
+								{#each ntfyTopicHistory as topic}
+									<option value={topic} />
+								{/each}
+							</datalist>
 						</div>
 					</div>
 					{#if subscribeUrl}
@@ -336,15 +385,14 @@
 
 	.overlay {
 		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+		inset: 0;
 		background: var(--modal-overlay);
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		z-index: 9999;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		padding: 40px 0;
+		overflow-y: auto;
 	}
 
 	.modal {
@@ -352,10 +400,26 @@
 		border: 1px solid var(--primary-accent-panel);
 		border-radius: 12px;
 		padding: 25px;
-		min-width: 420px;
-		max-width: 90vw;
+		width: min(720px, 90vw);
+		margin: 0 auto;
+		max-height: 95vh;
+		overflow-y: auto;
+		scrollbar-gutter: stable;
 		box-shadow: var(--shadow);
 		font-family: 'Open Sans', sans-serif;
+	}
+
+	.settings-columns {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+
+	.settings-column {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		overflow: visible;
 	}
 
 	.modal-header {
@@ -391,6 +455,7 @@
 
 	.setting-group {
 		margin-bottom: 20px;
+		position: relative;
 	}
 
 	.setting-label {
@@ -470,46 +535,51 @@
 		background: var(--primary-accent-soft);
 	}
 
-	.ntfy-info-box {
-		background: var(--surface-muted);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		padding: 10px 12px;
-		margin-bottom: 10px;
+	.ntfy-info-popover {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 100%;
+		background: var(--modal-bg);
+		border: 1px solid var(--primary-accent-border);
+		border-radius: 8px;
+		padding: 12px 14px;
+		margin-bottom: 6px;
 		font-size: 0.8em;
 		color: var(--muted-text);
 		line-height: 1.5;
+		text-align: left;
+		word-break: break-word;
+		overflow-wrap: break-word;
+		z-index: 10000;
+		box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 	}
 
-	.ntfy-info-box p {
+	.ntfy-info-popover p {
 		margin: 0 0 6px 0;
 	}
 
-	.ntfy-info-box ol {
+	.ntfy-info-popover ol {
 		margin: 4px 0 6px 18px;
 		padding: 0;
 	}
 
-	.ntfy-info-box li {
+	.ntfy-info-popover li {
 		margin-bottom: 3px;
 	}
 
-	.ntfy-info-box a {
+	.ntfy-info-popover a {
 		color: var(--primary-accent);
+		word-break: break-all;
 	}
 
-	.ntfy-info-box code {
+	.ntfy-info-popover code {
 		background: var(--surface);
 		border: 1px solid var(--border);
 		border-radius: 3px;
 		padding: 1px 4px;
 		font-size: 0.9em;
-	}
-
-	.ntfy-controls {
-		display: flex;
-		align-items: center;
-		gap: 12px;
+		word-break: break-all;
 	}
 
 	.ntfy-toggle {
@@ -555,15 +625,6 @@
 	.ntfy-toggle input:checked + .toggle-slider::before {
 		transform: translateX(18px);
 		background: var(--primary-accent);
-	}
-
-	.ntfy-status {
-		font-size: 0.85em;
-		color: var(--muted-text);
-	}
-
-	.ntfy-status.enabled {
-		color: var(--primary-accent);
 	}
 
 	.ntfy-config-row {
@@ -682,8 +743,12 @@
 
 	@media (max-width: 768px) {
 		.modal {
-			min-width: auto;
+			width: 90vw;
 			margin: 20px;
+		}
+
+		.settings-columns {
+			grid-template-columns: 1fr;
 		}
 
 		.ntfy-config-row {
