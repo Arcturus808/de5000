@@ -1,3 +1,5 @@
+import { ntfyServerUrl, ntfyTopic } from '$lib/stores/settings.js';
+
 /**
  * ntfy push notification utilities for the Svelte web app.
  * Publishes notifications via HTTP POST to any ntfy server URL.
@@ -12,8 +14,6 @@ let ntfyRunning = false;
  * @param {string} [priority='default'] - Priority: min, low, default, high, urgent
  */
 export async function publishNotification(title, message, priority = 'high') {
-	const { ntfyServerUrl, ntfyTopic } = await import('$lib/stores/settings.js');
-
 	let serverUrl, topic;
 	ntfyServerUrl.subscribe(v => serverUrl = v)();
 	ntfyTopic.subscribe(v => topic = v)();
