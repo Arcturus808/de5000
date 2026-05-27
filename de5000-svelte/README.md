@@ -1,4 +1,4 @@
-# ⚡ DE-5000 LCR Meter Monitor — SvelteKit SPA
+# <img src="../img/de-5000-128.png" width="32" alt="DE-5000 icon"> DE-5000 LCR Meter Monitor — SvelteKit SPA
 
 A **SvelteKit single-page application** for real-time monitoring of the DER EE DE-5000 LCR Meter via the Web Serial API. A modular, component-based rewrite of the [single-file HTML version](https://github.com/USERNAME/de5000-base).
 
