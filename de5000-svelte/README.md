@@ -30,6 +30,10 @@ A **SvelteKit single-page application** for real-time monitoring of the DER EE D
 - **Chrome 89+** or **Edge 89+** (Web Serial API support required)
 - DE-5000 LCR Meter connected via USB serial adapter
 
+### IR to USB Adapter
+
+Instead of purchasing the official DE-5000-USB interface module, you can build your own adapter with an IR phototransistor, pullup resistor, and CH340E USB-to-serial module. See the [Tauri app README](../de5000-tauri/README.md#ir-to-usb-adapter) for full DIY instructions with photos.
+
 ### To Build
 - [Node.js](https://nodejs.org/) (v18+)
 - npm
