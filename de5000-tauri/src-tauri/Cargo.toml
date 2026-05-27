@@ -2,6 +2,7 @@
 name = "de5000-tauri"
 version = "1.0.0"
 edition = "2021"
+license = "MIT"
 
 [lib]
 name = "de5000_tauri_lib"

@@ -1,6 +1,7 @@
 {
   "name": "de5000-tauri",
   "version": "1.0.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "vite dev",
