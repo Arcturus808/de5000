@@ -221,14 +221,15 @@ function createNtfyPortStore() {
 	return {
 		subscribe,
 		set(value) {
+			const num = parseInt(value, 10) || DEFAULT_NTFY_PORT;
 			if (typeof localStorage !== 'undefined') {
-				if (value === DEFAULT_NTFY_PORT) {
+				if (num === DEFAULT_NTFY_PORT) {
 					localStorage.removeItem(NTFY_PORT_KEY);
 				} else {
-					localStorage.setItem(NTFY_PORT_KEY, String(value));
+					localStorage.setItem(NTFY_PORT_KEY, String(num));
 				}
 			}
-			set(value);
+			set(num);
 		}
 	};
 }

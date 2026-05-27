@@ -432,7 +432,7 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding: 40px 0;
-		overflow-y: auto;
+		overflow: hidden;
 	}
 
 	.modal {

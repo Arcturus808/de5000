@@ -13,7 +13,7 @@ export async function startNtfy(port, topic) {
 
 	try {
 		const status = await invoke('ntfy_start', {
-			port: port,
+			port: parseInt(port, 10) || 8090,
 			topic: topic
 		});
 		ntfyRunning = status.running;
