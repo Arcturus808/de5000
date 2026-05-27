@@ -1,4 +1,4 @@
-# ⚡ DE-5000 LCR Meter Monitor
+# <img src="img/de-5000-128.png" width="32" alt="DE-5000 icon"> DE-5000 LCR Meter Monitor
 
 Real-time monitoring software for the **DER EE DE-5000 LCR Meter**, available as both a web app and a native desktop app.
 
