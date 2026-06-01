@@ -212,7 +212,7 @@
 
 <div class="chart-container" class:alert-flash={alertFlash}>
 	<div class="chart-header-row">
-		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}</h3>
+		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		<div class="header-right">
 			<span class="sample-count">Samples: {$dataLog.length}</span>
 			<AlertModal bind:showSecondary />
@@ -223,12 +223,6 @@
 	</div>
 	{#if $connected}
 		<div class="chart-controls">
-			{#if clearMessage}
-				<div class="clear-status">✓ Data Log Cleared</div>
-			{/if}
-			{#if $logging}
-				<div class="logging-status">● Data Logging Active</div>
-			{/if}
 			<div class="chart-actions">
 				<button class:warning={$logging} class:secondary={!$logging} on:click={handleLog}>
 					{$logging ? 'Stop Logging' : 'Start Logging'}
@@ -242,6 +236,9 @@
 					</select>
 				</div>
 				<button class="warning" on:click={handleClear}>Clear Log</button>
+				{#if clearMessage}
+					<span class="clear-status">✓ Data Log Cleared</span>
+				{/if}
 			</div>
 		</div>
 	{/if}
@@ -257,7 +254,7 @@
 {#if showSecondary}
 	<div class="chart-container secondary">
 		<div class="chart-header-row">
-			<h3>📈 Secondary Chart</h3>
+			<h3>📈 Secondary Chart{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		</div>
 		<canvas bind:this={secondaryCanvas} class="chart-canvas"></canvas>
 		<div class="chart-stats">
@@ -340,6 +337,7 @@
 		font-weight: bold;
 		font-family: 'Roboto', sans-serif;
 		animation: pulse 1.5s ease-in-out infinite;
+		margin-left: 8px;
 	}
 
 	.clear-status {
