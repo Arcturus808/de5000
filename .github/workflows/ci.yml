@@ -9,6 +9,8 @@ on:
 jobs:
   test-frontend:
     runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     strategy:
       matrix:
         app: [de5000-svelte, de5000-tauri]
@@ -39,6 +41,8 @@ jobs:
 
   test-rust:
     runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
