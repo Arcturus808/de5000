@@ -73,7 +73,18 @@ pub fn connect(
         .stop_bits(serialport::StopBits::One)
         .timeout(Duration::from_millis(1000))
         .open()
-        .map_err(|e| format!("Failed to open port {}: {}", port_name, e))?;
+        .map_err(|e| {
+            let msg = match e.kind() {
+                serialport::ErrorKind::Io(std::io::ErrorKind::NotFound) => {
+                    "Device not found — is it plugged in?".to_string()
+                }
+                serialport::ErrorKind::Io(std::io::ErrorKind::PermissionDenied) => {
+                    "Port in use by another application".to_string()
+                }
+                _ => format!("Cannot open {}: {}", port_name, e),
+            };
+            msg
+        })?;
 
     port.write_data_terminal_ready(true)
         .map_err(|e| format!("Failed to set DTR: {}", e))?;
