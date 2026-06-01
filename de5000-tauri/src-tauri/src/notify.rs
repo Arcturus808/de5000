@@ -57,24 +57,40 @@ pub async fn ntfy_start(
 
     let base_url = format!("http://{}:{}", local_ip, p);
 
-    let config = Config::resolve(
-        FileConfig::default(),
-        &ntfy::config::ServeArgs {
-            config: std::path::PathBuf::from("server.toml"),
-            listen_http: Some(format!(":{}", p)),
-            cache_file: None,
-            log_level: "info".to_string(),
-            base_url: Some(base_url),
-            listen_https: None,
-            cert_file: None,
-            key_file: None,
-            listen_unix: None,
-            upstream_base_url: Some("https://ntfy.sh".to_string()),
-            upstream_access_token: None,
-        },
-    );
-
-    let handle = ntfy::start_async(config).await.map_err(|e| format!("Failed to start ntfy: {}", e))?;
+    let mut last_err = String::new();
+    let handle = {
+        let mut attempt = 0u32;
+        loop {
+            let config = Config::resolve(
+                FileConfig::default(),
+                &ntfy::config::ServeArgs {
+                    config: std::path::PathBuf::from("server.toml"),
+                    listen_http: Some(format!(":{}", p)),
+                    cache_file: None,
+                    log_level: "info".to_string(),
+                    base_url: Some(base_url.clone()),
+                    listen_https: None,
+                    cert_file: None,
+                    key_file: None,
+                    listen_unix: None,
+                    upstream_base_url: Some("https://ntfy.sh".to_string()),
+                    upstream_access_token: None,
+                },
+            );
+            match ntfy::start_async(config).await {
+                Ok(h) => break Some(h),
+                Err(e) => {
+                    last_err = e.to_string();
+                    attempt += 1;
+                    if attempt >= 5 {
+                        break None;
+                    }
+                    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+                }
+            }
+        }
+    };
+    let handle = handle.ok_or_else(|| format!("Failed to start ntfy: {}", last_err))?;
     *state.handle.lock().map_err(|e| e.to_string())? = Some(handle);
 
     Ok(NtfyStatus {

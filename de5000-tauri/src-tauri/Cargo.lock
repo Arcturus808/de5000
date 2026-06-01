@@ -1026,6 +1026,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
+ "tokio",
 ]
 
 [[package]]
@@ -3086,7 +3087,7 @@ checksum = "38bf9645c8b145698bb0b18a4637dcacbc421ea49bef2317e4fd8065a387cf21"
 [[package]]
 name = "ntfy-rs"
 version = "0.1.0"
-source = "git+https://github.com/Arcturus808/ntfy-rs#e4770aa9ed66edd7e432e36c8dd522e6d48e0fde"
+source = "git+https://github.com/Arcturus808/ntfy-rs?rev=19d2ec3#19d2ec3a9a030fd2f1788a24004c5747fd7b3db3"
 dependencies = [
  "aes-gcm",
  "anyhow",
