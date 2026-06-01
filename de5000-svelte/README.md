@@ -2,7 +2,7 @@
 
 A **SvelteKit single-page application** for real-time monitoring of the DER EE DE-5000 LCR Meter via the Web Serial API. A modular, component-based rewrite of the [single-file HTML version](https://github.com/USERNAME/de5000-base).
 
-![Coverage](https://codecov.io/gh/Arcturus808/de5000/branch/main/graph/badge.svg)
+[![codecov](https://codecov.io/github/Arcturus808/de5000/graph/badge.svg?token=1GZWIKIE26)](https://codecov.io/github/Arcturus808/de5000)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![SvelteKit](https://img.shields.io/badge/SvelteKit-v2-orange)
 ![Chrome](https://img.shields.io/badge/Chrome-89+-green)
