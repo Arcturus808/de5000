@@ -4,9 +4,10 @@ A desktop application for real-time monitoring of the **DER EE DE-5000 LCR Meter
 
 Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https://kit.svelte.dev/) (frontend).
 
-![Windows](https://img.shields.io/badge/platform-Windows-blue)
-![Tauri](https://img.shields.io/badge/Tauri-v2-orange)
+![Coverage](https://codecov.io/gh/Arcturus808/de5000/branch/main/graph/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Tauri](https://img.shields.io/badge/Tauri-v2-orange)
+![Windows](https://img.shields.io/badge/platform-Windows-blue)
 
 ## Features
 
