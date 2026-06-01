@@ -49,7 +49,7 @@ jobs:
           node-version: 24
 
       - name: Configure git to use GitHub token
-        run: git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        run: git config --global url."https://x-access-token:${{ secrets.PAT_GITHUB_TOKEN }}@github.com/Arcturus808/".insteadOf "https://github.com/Arcturus808/"
 
       - name: Install frontend dependencies
         working-directory: de5000-tauri
