@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install frontend dependencies
         working-directory: de5000-tauri
@@ -40,4 +40,4 @@ jobs:
           releaseName: 'DE-5000 Monitor ${{ github.ref_name }}'
           releaseBody: 'See the assets below to download the latest version.'
           releaseDraft: true
-          prerelease: false
+          prerelease: true
