@@ -48,6 +48,9 @@ jobs:
         with:
           node-version: 24
 
+      - name: Configure git to use GitHub token
+        run: git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
       - name: Install frontend dependencies
         working-directory: de5000-tauri
         run: npm install
