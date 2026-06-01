@@ -142,3 +142,84 @@ pub fn ntfy_publish(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ntfy_state_new_defaults() {
+        let state = NtfyState::new();
+        assert_eq!(*state.port.lock().unwrap(), 8090);
+        assert_eq!(*state.topic.lock().unwrap(), "de5000-alerts");
+        assert!(state.handle.lock().unwrap().is_none());
+    }
+
+    #[test]
+    fn test_ntfy_state_stop_when_not_running() {
+        let state = NtfyState::new();
+        // Should not panic when no server is running
+        state.stop();
+        assert!(state.handle.lock().unwrap().is_none());
+    }
+
+    #[test]
+    fn test_config_resolve_with_port() {
+        let config = Config::resolve(
+            FileConfig::default(),
+            &ntfy_rs::config::ServeArgs {
+                config: std::path::PathBuf::from("server.toml"),
+                listen_http: Some(":8090".to_string()),
+                cache_file: None,
+                log_level: "info".to_string(),
+                base_url: Some("http://192.168.0.82:8090".to_string()),
+                listen_https: None,
+                cert_file: None,
+                key_file: None,
+                listen_unix: None,
+                upstream_base_url: Some("https://ntfy.sh".to_string()),
+                upstream_access_token: None,
+            },
+        );
+        assert_eq!(config.listen_http, ":8090");
+        assert_eq!(config.base_url, "http://192.168.0.82:8090");
+        assert_eq!(config.upstream_base_url.as_deref(), Some("https://ntfy.sh"));
+    }
+
+    #[test]
+    fn test_config_resolve_defaults() {
+        let config = Config::resolve(
+            FileConfig::default(),
+            &ntfy_rs::config::ServeArgs {
+                config: std::path::PathBuf::from("server.toml"),
+                listen_http: None,
+                cache_file: None,
+                log_level: "info".to_string(),
+                base_url: None,
+                listen_https: None,
+                cert_file: None,
+                key_file: None,
+                listen_unix: None,
+                upstream_base_url: None,
+                upstream_access_token: None,
+            },
+        );
+        assert_eq!(config.listen_http, ":2586");
+        assert_eq!(config.base_url, "");
+        assert!(config.upstream_base_url.is_none());
+    }
+
+    #[test]
+    fn test_ntfy_status_serialization() {
+        let status = NtfyStatus {
+            running: true,
+            port: 8090,
+            topic: "de5000-alerts".to_string(),
+            subscribe_url: "http://192.168.0.82:8090/de5000-alerts".to_string(),
+        };
+        let json = serde_json::to_string(&status).unwrap();
+        assert!(json.contains("\"running\":true"));
+        assert!(json.contains("\"port\":8090"));
+        assert!(json.contains("\"topic\":\"de5000-alerts\""));
+    }
+}

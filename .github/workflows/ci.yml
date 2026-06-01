@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-frontend:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        app: [de5000-svelte, de5000-tauri]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.app }}
+        run: npm install
+
+      - name: Run tests
+        working-directory: ${{ matrix.app }}
+        run: npm test
+
+  test-rust:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: de5000-tauri/src-tauri -> target
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        working-directory: de5000-tauri
+        run: npm install
+
+      - name: Run Rust tests
+        working-directory: de5000-tauri/src-tauri
+        run: cargo test
+
+      - name: Run Rust tests with coverage
+        working-directory: de5000-tauri/src-tauri
+        run: |
+          cargo install cargo-llvm-cov --locked
+          cargo llvm-cov --lcov --output-path lcov.info
+        env:
+          RUSTFLAGS: "-C instrument-coverage"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: de5000-tauri/src-tauri/lcov.info
+          flags: rust
+          fail_ci_if_error: false
