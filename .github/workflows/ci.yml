@@ -25,9 +25,17 @@ jobs:
         working-directory: ${{ matrix.app }}
         run: npm install
 
-      - name: Run tests
+      - name: Run tests with coverage
         working-directory: ${{ matrix.app }}
-        run: npm test
+        run: npx vitest run --coverage
+
+      - name: Upload JS coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ matrix.app }}/coverage/lcov.info
+          flags: ${{ matrix.app }}
+          fail_ci_if_error: false
 
   test-rust:
     runs-on: windows-latest

@@ -7,6 +7,10 @@ export default defineConfig({
 		include: ['src/**/*.test.js'],
 		environment: 'jsdom',
 		setupFiles: ['src/tests/setup.js'],
-		testTimeout: 15000
+		testTimeout: 15000,
+		coverage: {
+			reporter: ['lcov'],
+			reportsDirectory: './coverage'
+		}
 	}
 });

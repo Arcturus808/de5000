@@ -1015,7 +1015,7 @@ dependencies = [
 
 [[package]]
 name = "de5000-tauri"
-version = "1.0.0"
+version = "1.0.0-alpha.2"
 dependencies = [
  "local-ip-address",
  "ntfy-rs",
