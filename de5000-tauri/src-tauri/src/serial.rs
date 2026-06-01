@@ -129,7 +129,13 @@ fn read_loop(app: AppHandle, port: &mut dyn serialport::SerialPort, reading: Arc
                 // Timeout is expected, just loop
             }
             Err(e) => {
-                let _ = app.emit("serial-error", format!("Read error: {}", e));
+                let msg = match e.kind() {
+                    std::io::ErrorKind::PermissionDenied => "Device disconnected".to_string(),
+                    std::io::ErrorKind::BrokenPipe => "Device disconnected".to_string(),
+                    std::io::ErrorKind::NotConnected => "Device disconnected".to_string(),
+                    _ => format!("Connection lost: {}", e),
+                };
+                let _ = app.emit("serial-error", msg);
                 break;
             }
         }
