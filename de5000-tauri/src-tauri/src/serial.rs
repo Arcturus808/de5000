@@ -74,16 +74,22 @@ pub fn connect(
         .timeout(Duration::from_millis(1000))
         .open()
         .map_err(|e| {
-            let msg = match e.kind() {
+            let err_str = e.to_string().to_lowercase();
+            match e.kind() {
                 serialport::ErrorKind::Io(std::io::ErrorKind::NotFound) => {
                     "Device not found — is it plugged in?".to_string()
                 }
                 serialport::ErrorKind::Io(std::io::ErrorKind::PermissionDenied) => {
                     "Port in use by another application".to_string()
                 }
+                _ if err_str.contains("cannot find") || err_str.contains("not found") => {
+                    "Device not found — is it plugged in?".to_string()
+                }
+                _ if err_str.contains("access") || err_str.contains("denied") || err_str.contains("in use") => {
+                    "Port in use by another application".to_string()
+                }
                 _ => format!("Cannot open {}: {}", port_name, e),
-            };
-            msg
+            }
         })?;
 
     port.write_data_terminal_ready(true)
