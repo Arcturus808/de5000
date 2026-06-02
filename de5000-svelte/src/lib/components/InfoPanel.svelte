@@ -19,10 +19,8 @@
 	</div>
 	<div class="info-item modes-item">
 		<label>Active Modes</label>
-		<div class="mode-badges">
-			{#each $activeModes as mode}
-				<span class="badge">{mode}</span>
-			{/each}
+		<div class="mode-text">
+			{$activeModes.length > 0 ? $activeModes.join(', ') : 'None'}
 		</div>
 	</div>
 </div>
@@ -70,19 +68,10 @@
 		font-family: var(--readout-font);
 	}
 
-	.mode-badges {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
+	.mode-text {
+		color: var(--readout-color);
+		font-size: 1.1em;
+		font-family: var(--readout-font);
 		margin-top: 5px;
-	}
-
-	.badge {
-		background: var(--primary-accent-muted);
-		color: var(--primary-accent);
-		padding: 5px 10px;
-		border-radius: 3px;
-		font-size: 0.9em;
-		border: 1px solid var(--primary-accent-panel);
 	}
 </style>

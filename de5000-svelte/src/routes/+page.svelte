@@ -82,7 +82,7 @@
 <style>
 	.top-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: 4fr 4fr 5fr;
 		gap: 12px;
 		margin-bottom: 12px;
 	}
