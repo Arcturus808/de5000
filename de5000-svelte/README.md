@@ -1,6 +1,6 @@
 # <img src="../img/de-5000-128.png" width="32" alt="DE-5000 icon"> DE-5000 LCR Meter Monitor — SvelteKit SPA
 
-A **SvelteKit single-page application** for real-time monitoring of the DER EE DE-5000 LCR Meter via the Web Serial API. A modular, component-based rewrite of the [single-file HTML version](https://github.com/USERNAME/de5000-base).
+A **SvelteKit single-page application** for real-time monitoring of the DER EE DE-5000 LCR Meter via the Web Serial API.
 
 [![codecov](https://codecov.io/github/Arcturus808/de5000/graph/badge.svg?token=1GZWIKIE26)](https://codecov.io/github/Arcturus808/de5000)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -154,7 +154,6 @@ The DE-5000 uses the **Cyrustek ES51919** chipset. Each data packet is 17 bytes 
 
 ## Related Projects
 
-- [de5000-base](https://github.com/USERNAME/de5000-base) — Original single-file HTML version
 - [de5000-tauri](https://github.com/Arcturus808/de5000) — Tauri desktop app (native serial via Rust backend, embedded ntfy-rs server)
 
 ## Credits
