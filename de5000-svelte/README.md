@@ -11,6 +11,7 @@ A **SvelteKit single-page application** for real-time monitoring of the DER EE D
 ## Features
 
 - **Real-time measurement display** — primary and secondary values
+- **Tabular measurement details** — measured values (main, secondary, model, frequency, tolerance) alongside calculated values (reactance, impedance, ESR, Q, D) derived from the measurement
 - **Customizable typefaces** — choose display and readout fonts (Courier New, Poppins, Roboto, Open Sans, LED Segment) with live preview; all fonts bundled locally (offline)
 - **Customizable colors** — curated palette dropdowns (Primary, Secondary, Neutral) with custom color naming and storage
 - **Data logging** — record measurements with timestamps
@@ -93,7 +94,7 @@ src/
         ├── Controls.svelte           — (unused — actions moved to Header and Chart)
         ├── MeasurementCard.svelte    — Combined primary/secondary value display (stacked)
         ├── InfoPanel.svelte          — Frequency, status, tolerance, modes
-        ├── MeasurementDetails.svelte — Detailed readings with tooltips
+        ├── MeasurementDetails.svelte — Tabular measured + calculated values
         ├── Chart.svelte              — Dual canvas charts + logging/export/clear + inline stats + alert checking
         ├── AlertModal.svelte         — Alert threshold configuration modal
         ├── Settings.svelte           — Typeface, color & ntfy notification customization modal
