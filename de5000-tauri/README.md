@@ -12,6 +12,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 ## Features
 
 - **Real-time measurement display** — primary and secondary values
+- **Tabular measurement details** — measured values (main, secondary, model, frequency, tolerance) alongside calculated values (reactance, impedance, ESR, Q, D) derived from the measurement
 - **Customizable typefaces** — choose display and readout fonts (Courier New, Poppins, Roboto, Open Sans, LED Segment) with live preview; all fonts bundled locally (offline)
 - **Customizable colors** — curated palette dropdowns (Primary, Secondary, Neutral) with custom color naming and storage
 - **Serial port selector** — inline in header with auto-detection of USB serial devices, colored status dot
@@ -196,6 +197,7 @@ de5000-tauri/
 │   │   └── components/         # Svelte UI components
 │   │       ├── Header.svelte       # Title + inline port selector/connect + PC Link indicator
 │   │       ├── MeasurementCard.svelte # Combined primary/secondary display (stacked)
+│   │       ├── MeasurementDetails.svelte # Tabular measured + calculated values
 │   │       ├── Chart.svelte       # Dual canvas charts + logging/export/clear + inline stats + alert checking
 │   │       ├── AlertModal.svelte  # Alert threshold configuration modal
 │   │       ├── Settings.svelte    # Typeface & color customization modal
