@@ -15,13 +15,21 @@
 
 	let showSecondary = localStorage.getItem('de5000-show-secondary') === 'true';
 
+	let secondaryEl;
+	let soloCanvasHeight = 150;
+
 	async function toggleSecondary() {
+		if (showSecondary && secondaryEl) {
+			soloCanvasHeight = primaryCanvas.offsetHeight + secondaryEl.offsetHeight + 8; // 8px gap
+		}
 		showSecondary = !showSecondary;
 		localStorage.setItem('de5000-show-secondary', showSecondary.toString());
-		await tick();
-		requestAnimationFrame(() => {
-			if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
-		});
+		if (!showSecondary) {
+			await tick();
+			requestAnimationFrame(() => {
+				if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
+			});
+		}
 	}
 
 	onMount(() => {
@@ -214,7 +222,7 @@
 	}
 </script>
 
-<div class="chart-container" class:alert-flash={alertFlash} class:solo={!showSecondary}>
+<div class="chart-container" class:alert-flash={alertFlash}>
 	<div class="chart-header-row">
 		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		<div class="header-right">
@@ -246,7 +254,7 @@
 			</div>
 		</div>
 	{/if}
-	<canvas bind:this={primaryCanvas} class="chart-canvas"></canvas>
+	<canvas bind:this={primaryCanvas} class="chart-canvas" style="height: {showSecondary ? '150px' : soloCanvasHeight + 'px'}"></canvas>
 	<div class="chart-stats">
 		<div class="stat-item"><span class="stat-label">Min</span> <span class="stat-value primary-stat">{$statistics.min}</span></div>
 		<div class="stat-item"><span class="stat-label">Max</span> <span class="stat-value primary-stat">{$statistics.max}</span></div>
@@ -256,7 +264,7 @@
 </div>
 
 {#if showSecondary}
-	<div class="chart-container secondary">
+	<div class="chart-container secondary" bind:this={secondaryEl}>
 		<div class="chart-header-row">
 			<h3>📈 Secondary Chart{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		</div>
@@ -416,10 +424,6 @@
 		font-family: 'Roboto', sans-serif;
 		cursor: pointer;
 		border-left: 1px solid var(--border-strong);
-	}
-
-	.chart-container.solo .chart-canvas {
-		height: 390px;
 	}
 
 	.chart-canvas {
