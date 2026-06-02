@@ -27,7 +27,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 
 ## Screenshot
 
-<!-- TODO: Add screenshot -->
+![DE-5000 Tauri App](../img/tauri_app.png)
 
 ## Requirements
 
