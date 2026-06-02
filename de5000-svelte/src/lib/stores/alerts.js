@@ -64,28 +64,28 @@ export function checkAlerts(alertConfig, mainVal, secVal) {
 	if (alertConfig.primaryHigh.enabled && alertConfig.primaryHigh.value !== '') {
 		const threshold = parseFloat(alertConfig.primaryHigh.value);
 		if (!isNaN(threshold) && mainVal !== null && mainVal > threshold) {
-			triggered.push('primaryHigh');
+			triggered.push({ name: 'primaryHigh', threshold, value: mainVal });
 		}
 	}
 
 	if (alertConfig.primaryLow.enabled && alertConfig.primaryLow.value !== '') {
 		const threshold = parseFloat(alertConfig.primaryLow.value);
 		if (!isNaN(threshold) && mainVal !== null && mainVal < threshold) {
-			triggered.push('primaryLow');
+			triggered.push({ name: 'primaryLow', threshold, value: mainVal });
 		}
 	}
 
 	if (alertConfig.secondaryHigh.enabled && alertConfig.secondaryHigh.value !== '') {
 		const threshold = parseFloat(alertConfig.secondaryHigh.value);
 		if (!isNaN(threshold) && secVal !== null && secVal > threshold) {
-			triggered.push('secondaryHigh');
+			triggered.push({ name: 'secondaryHigh', threshold, value: secVal });
 		}
 	}
 
 	if (alertConfig.secondaryLow.enabled && alertConfig.secondaryLow.value !== '') {
 		const threshold = parseFloat(alertConfig.secondaryLow.value);
 		if (!isNaN(threshold) && secVal !== null && secVal < threshold) {
-			triggered.push('secondaryLow');
+			triggered.push({ name: 'secondaryLow', threshold, value: secVal });
 		}
 	}
 
