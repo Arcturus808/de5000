@@ -277,7 +277,7 @@
 		flex: 1;
 		min-height: 0;
 		display: grid;
-		grid-template-rows: 1fr 1fr;
+		grid-template-rows: 6fr 5fr;
 		gap: 8px;
 		margin-top: 12px;
 	}
