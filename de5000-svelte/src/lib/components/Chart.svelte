@@ -58,6 +58,8 @@
 	let alertActive = false;
 	let alertFlash = false;
 	let notifiedAlerts = new Set();
+	let lastNotifyTime = 0;
+	const NOTIFY_COOLDOWN_MS = 5000;
 
 	function formatAlertName(name) {
 		return name.replace(/([A-Z])/g, ' $1').trim().replace(/High$/, '≥').replace(/Low$/, '≤');
@@ -74,12 +76,14 @@
 				playAlertSound();
 				setTimeout(() => (alertFlash = false), 500);
 				if ($ntfyEnabled) {
+					const now = Date.now();
 					const toNotify = $ntfyOncePerCrossing
 						? triggered.filter(t => !notifiedAlerts.has(t.name))
 						: triggered;
-					if (toNotify.length > 0) {
+					if (toNotify.length > 0 && now - lastNotifyTime >= NOTIFY_COOLDOWN_MS) {
 						const details = toNotify.map(t => `${formatAlertName(t.name)} ${t.value} (threshold ${t.threshold})`).join(', ');
-						publishNotification('DE-5000 Alert', details, 'high');
+						lastNotifyTime = now;
+						publishNotification('DE-5000 Alert', details, 'high').catch(() => {});
 						toNotify.forEach(t => notifiedAlerts.add(t.name));
 					}
 				}

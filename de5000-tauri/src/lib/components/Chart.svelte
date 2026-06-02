@@ -5,7 +5,7 @@
 	import { exportData } from '$lib/utils/export.js';
 	import { alerts, checkAlerts, playAlertSound } from '$lib/stores/alerts.js';
 	import { ntfyEnabled, ntfyOncePerCrossing } from '$lib/stores/settings.js';
-	import { publishNotification } from '$lib/utils/notify.js';
+	import { publishNotification, isNtfyRunning } from '$lib/utils/notify.js';
 	import AlertModal from './AlertModal.svelte';
 
 	let primaryCanvas;
@@ -72,7 +72,7 @@
 				alertActive = true;
 				alertFlash = true;
 				playAlertSound();
-				if ($ntfyEnabled) {
+				if ($ntfyEnabled && isNtfyRunning()) {
 					const toNotify = $ntfyOncePerCrossing
 						? triggered.filter(t => !notifiedAlerts.has(t.name))
 						: triggered;
