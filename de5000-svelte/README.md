@@ -25,7 +25,7 @@ A **SvelteKit single-page application** for real-time monitoring of the DER EE D
 
 ## Screenshot
 
-![DE-5000 Svelte App](../img/tauri_app.png)
+![DE-5000 Svelte App](../img/svelte_app.png)
 
 ## Requirements
 
