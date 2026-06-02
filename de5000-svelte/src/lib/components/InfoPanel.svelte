@@ -13,7 +13,7 @@
 			<div class="value">{$lastMeasurement?.main_status || '--'}</div>
 		</div>
 		<div class="info-item">
-			<label>Tolerance</label>
+			<label>Tolerance<span class="info-icon">?<span class="tooltip">Applies to the sorting function of the meter</span></span></label>
 			<div class="value">{$lastMeasurement?.tolerance || 'N/A'}</div>
 		</div>
 	</div>
@@ -57,7 +57,8 @@
 	label {
 		color: var(--label-color);
 		font-size: 0.9em;
-		display: block;
+		display: inline-flex;
+		align-items: center;
 		margin-bottom: 5px;
 		font-family: var(--readout-font);
 	}
@@ -73,5 +74,72 @@
 		font-size: 1.1em;
 		font-family: var(--readout-font);
 		margin-top: 5px;
+	}
+
+	.info-icon {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: var(--secondary-accent-muted);
+		border: 1px solid var(--secondary-accent-border);
+		border-radius: 50%;
+		text-align: center;
+		line-height: 16px;
+		font-size: 11px;
+		color: var(--secondary-accent-text);
+		cursor: help;
+		margin-left: 5px;
+		position: relative;
+	}
+
+	.info-icon:hover {
+		background: var(--secondary-accent-border);
+	}
+
+	.tooltip {
+		visibility: hidden;
+		position: absolute;
+		bottom: 125%;
+		left: 50%;
+		transform: translateX(-50%);
+		background: var(--popover-bg);
+		color: var(--primary-accent);
+		padding: 10px 15px;
+		border-radius: 5px;
+		border: 1px solid var(--primary-accent-panel);
+		font-size: 12px;
+		white-space: nowrap;
+		z-index: 1000;
+		box-shadow: var(--shadow);
+	}
+
+	.tooltip::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 5px solid transparent;
+		border-top-color: var(--popover-bg);
+	}
+
+	.info-icon:hover .tooltip {
+		visibility: visible;
+	}
+
+	@media (max-width: 768px) {
+		.tooltip {
+			white-space: normal;
+			width: 200px;
+			left: auto;
+			right: 0;
+			transform: none;
+		}
+
+		.tooltip::after {
+			left: auto;
+			right: 10px;
+			transform: none;
+		}
 	}
 </style>
