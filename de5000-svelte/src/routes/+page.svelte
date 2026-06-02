@@ -85,6 +85,7 @@
 		grid-template-columns: 4fr 4fr 5fr;
 		gap: 12px;
 		margin-bottom: 12px;
+		flex-shrink: 0;
 	}
 
 	@media (max-width: 768px) {

@@ -15,21 +15,13 @@
 
 	let showSecondary = localStorage.getItem('de5000-show-secondary') === 'true';
 
-	let secondaryEl;
-	let soloCanvasHeight = 150;
-
 	async function toggleSecondary() {
-		if (showSecondary && secondaryEl) {
-			soloCanvasHeight = primaryCanvas.offsetHeight + secondaryEl.offsetHeight + 8; // 8px gap
-		}
 		showSecondary = !showSecondary;
 		localStorage.setItem('de5000-show-secondary', showSecondary.toString());
-		if (!showSecondary) {
-			await tick();
-			requestAnimationFrame(() => {
-				if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
-			});
-		}
+		await tick();
+		requestAnimationFrame(() => {
+			if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
+		});
 	}
 
 	onMount(() => {
@@ -222,7 +214,8 @@
 	}
 </script>
 
-<div class="chart-container" class:alert-flash={alertFlash} class:solo={!showSecondary}>
+<div class="chart-wrapper">
+	<div class="chart-container" class:alert-flash={alertFlash}>
 	<div class="chart-header-row">
 		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		<div class="header-right">
@@ -254,7 +247,7 @@
 			</div>
 		</div>
 	{/if}
-	<canvas bind:this={primaryCanvas} class="chart-canvas" style="height: {showSecondary ? '150px' : soloCanvasHeight + 'px'}"></canvas>
+	<canvas bind:this={primaryCanvas} class="chart-canvas"></canvas>
 	<div class="chart-stats">
 		<div class="stat-item"><span class="stat-label">Min</span> <span class="stat-value primary-stat">{$statistics.min}</span></div>
 		<div class="stat-item"><span class="stat-label">Max</span> <span class="stat-value primary-stat">{$statistics.max}</span></div>
@@ -264,7 +257,7 @@
 </div>
 
 {#if showSecondary}
-	<div class="chart-container secondary" bind:this={secondaryEl}>
+	<div class="chart-container secondary">
 		<div class="chart-header-row">
 			<h3>📈 Secondary Chart{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		</div>
@@ -277,8 +270,16 @@
 		</div>
 	</div>
 {/if}
+</div>
 
 <style>
+	.chart-wrapper {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
 	.chart-container {
 		background: var(--surface);
 		border: 1px solid var(--primary-accent-panel);
@@ -286,6 +287,10 @@
 		padding: 12px;
 		margin-top: 12px;
 		transition: border-color 0.3s ease;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
 	}
 
 	.chart-container.alert-flash {
@@ -295,6 +300,10 @@
 	.chart-container.secondary {
 		border-color: var(--secondary-accent-border);
 		margin-top: 8px;
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.chart-header-row {
@@ -432,13 +441,10 @@
 		border-left: 1px solid var(--border-strong);
 	}
 
-	.chart-container.solo .chart-canvas {
-		height: 390px;
-	}
-
 	.chart-canvas {
 		width: 100%;
-		height: 150px;
+		flex: 1;
+		min-height: 0;
 		background: var(--chart-bg);
 		border-radius: 5px;
 	}
