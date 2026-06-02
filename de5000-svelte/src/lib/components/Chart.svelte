@@ -24,14 +24,22 @@
 		});
 	}
 
+	let resizeObserver;
+
 	onMount(() => {
 		primaryCtx = primaryCanvas.getContext('2d');
 		drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
 		window.addEventListener('de5000-theme-change', redrawCharts);
+
+		resizeObserver = new ResizeObserver(() => {
+			requestAnimationFrame(() => redrawCharts());
+		});
+		resizeObserver.observe(primaryCanvas);
 	});
 
 	onDestroy(() => {
 		window.removeEventListener('de5000-theme-change', redrawCharts);
+		if (resizeObserver) resizeObserver.disconnect();
 	});
 
 	$: if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
@@ -41,6 +49,7 @@
 			secondaryCtx = secondaryCanvas.getContext('2d');
 		}
 		drawChart(secondaryCtx, secondaryCanvas, $secChartData, getThemeColor('--secondary-accent'));
+		if (resizeObserver) resizeObserver.observe(secondaryCanvas);
 	} else {
 		secondaryCtx = null;
 	}
