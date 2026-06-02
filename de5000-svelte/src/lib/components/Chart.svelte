@@ -210,7 +210,7 @@
 	}
 </script>
 
-<div class="chart-container" class:alert-flash={alertFlash}>
+<div class="chart-container" class:alert-flash={alertFlash} class:solo={!showSecondary}>
 	<div class="chart-header-row">
 		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
 		<div class="header-right">
@@ -418,6 +418,10 @@
 		font-family: 'Roboto', sans-serif;
 		cursor: pointer;
 		border-left: 1px solid var(--border-strong);
+	}
+
+	.chart-container.solo .chart-canvas {
+		height: 308px;
 	}
 
 	.chart-canvas {
