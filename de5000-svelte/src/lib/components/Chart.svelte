@@ -214,7 +214,7 @@
 	}
 </script>
 
-<div class="chart-wrapper">
+<div class="chart-wrapper" class:solo={!showSecondary}>
 	<div class="chart-container" class:alert-flash={alertFlash}>
 	<div class="chart-header-row">
 		<h3>📈 Primary Chart {#if alertActive}<span class="alert-badge">⚠ ALERT</span>{/if}{#if $logging}<span class="logging-status">● Data Logging Active</span>{/if}</h3>
@@ -276,8 +276,14 @@
 	.chart-wrapper {
 		flex: 1;
 		min-height: 0;
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-rows: 1fr 1fr;
+		gap: 8px;
+		margin-top: 12px;
+	}
+
+	.chart-wrapper.solo {
+		grid-template-rows: 1fr;
 	}
 
 	.chart-container {
@@ -285,12 +291,11 @@
 		border: 1px solid var(--primary-accent-panel);
 		border-radius: 10px;
 		padding: 12px;
-		margin-top: 12px;
 		transition: border-color 0.3s ease;
 		display: flex;
 		flex-direction: column;
-		flex: 1;
 		min-height: 0;
+		overflow: hidden;
 	}
 
 	.chart-container.alert-flash {
@@ -299,11 +304,6 @@
 
 	.chart-container.secondary {
 		border-color: var(--secondary-accent-border);
-		margin-top: 8px;
-		flex: 1;
-		min-height: 0;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.chart-header-row {
