@@ -425,7 +425,7 @@
 	}
 
 	.chart-container.solo .chart-canvas {
-		height: 380px;
+		height: 400px;
 	}
 
 	.chart-canvas {
