@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { chartData, secChartData, connected, logging, dataLog, statistics, secStatistics, lastMeasurement, showError, showSuccess, clearLogData } from '$lib/stores/device.js';
 	import { formatDisplayValue } from '$lib/utils/format.js';
 	import { exportData } from '$lib/utils/export.js';
@@ -15,9 +15,13 @@
 
 	let showSecondary = localStorage.getItem('de5000-show-secondary') === 'true';
 
-	function toggleSecondary() {
+	async function toggleSecondary() {
 		showSecondary = !showSecondary;
 		localStorage.setItem('de5000-show-secondary', showSecondary.toString());
+		await tick();
+		requestAnimationFrame(() => {
+			if (primaryCtx) drawChart(primaryCtx, primaryCanvas, $chartData, getThemeColor('--primary-accent'));
+		});
 	}
 
 	onMount(() => {
@@ -421,7 +425,7 @@
 	}
 
 	.chart-container.solo .chart-canvas {
-		height: 308px;
+		height: 336px;
 	}
 
 	.chart-canvas {
