@@ -100,10 +100,34 @@
 
 	$: hasCalculated = reactance != null || impedance != null || esr != null || qualityFactor != null || dissipationFactor != null;
 	$: model = m?.parallel ? 'Parallel' : 'Series';
+
+	let copyFeedback = false;
+
+	function copyAll() {
+		const rows = [];
+		rows.push(`Main\t${mainDetail}`);
+		rows.push(`Secondary\t${secDetail}`);
+		rows.push(`Model\t${m ? model : '--'}`);
+		rows.push(`Frequency\t${m?.freq || '--'}`);
+		rows.push(`Tolerance\t${m?.tolerance || 'N/A'}`);
+		if (reactance != null) rows.push(`Reactance (X)\t${formatCalculated(reactance, 'Ohm')}`);
+		if (impedance != null) rows.push(`Impedance (|Z|)\t${formatCalculated(impedance, 'Ohm')}`);
+		if (esr != null) rows.push(`ESR\t${formatCalculated(esr, 'Ohm')}`);
+		if (qualityFactor != null) rows.push(`Quality (Q)\t${formatDimensionless(qualityFactor)}`);
+		if (dissipationFactor != null && m?.sec_quantity !== 'D') rows.push(`Dissipation (D)\t${formatDimensionless(dissipationFactor)}`);
+		navigator.clipboard.writeText(rows.join('\n'));
+		copyFeedback = true;
+		setTimeout(() => copyFeedback = false, 1500);
+	}
 </script>
 
 <div class="measurement-details">
-	<h3>Measurement Details</h3>
+	<div class="header-row">
+		<h3>Measurement Details</h3>
+		<button class="copy-btn" on:click={copyAll} title="Copy all values">
+			{copyFeedback ? '✓ Copied' : '📋'}
+		</button>
+	</div>
 	<div class="tables-row">
 		<table class="detail-table">
 			<tbody>
@@ -176,11 +200,34 @@
 		padding: 12px 15px;
 	}
 
+	.header-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 8px;
+	}
+
 	h3 {
 		color: var(--card-title-color);
 		font-size: 1em;
-		margin-bottom: 8px;
+		margin: 0;
 		font-family: var(--readout-font);
+	}
+
+	.copy-btn {
+		background: var(--secondary-accent-muted);
+		border: 1px solid var(--secondary-accent-border);
+		border-radius: 4px;
+		color: var(--secondary-accent-text);
+		font-size: 0.8em;
+		padding: 2px 8px;
+		cursor: pointer;
+		font-family: var(--readout-font);
+		transition: background 0.15s;
+	}
+
+	.copy-btn:hover {
+		background: var(--secondary-accent-border);
 	}
 
 	.tables-row {
