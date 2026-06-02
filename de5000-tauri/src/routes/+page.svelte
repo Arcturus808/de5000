@@ -69,7 +69,7 @@
 <style>
 	.top-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: 3fr 2fr 3fr;
 		gap: 12px;
 		margin-bottom: 12px;
 	}
