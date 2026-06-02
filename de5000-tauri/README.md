@@ -303,6 +303,12 @@ The DE-5000 uses the **Cyrustek ES51919** chipset protocol. Each data packet is 
 | 10–14 | Secondary measurement (quantity, value, units, status) |
 | 15–16 | Footer (`0x0D 0x0A`) |
 
+## Troubleshooting
+
+### Antivirus false positives
+
+Some antivirus engines (e.g., Trapmine on VirusTotal) flag the executable as malicious. This is a **false positive** common to apps built with Tauri/Rust that bundle a WebView runtime. The source code is fully open — you can audit it and build from source using the instructions above.
+
 ## Credits
 
 - Original serial protocol code by [4x1md](https://github.com/4x1md) (2017)
