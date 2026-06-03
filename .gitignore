@@ -17,14 +17,6 @@ dist/
 .env
 .env.*
 
-# IDE
-.vscode/
-.windsurf/
-
-# OS files
-Thumbs.db
-.DS_Store
-
 # Logs
 *.log
 
