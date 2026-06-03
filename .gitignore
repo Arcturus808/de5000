@@ -19,6 +19,7 @@ dist/
 
 # IDE
 .vscode/
+.windsurf/
 
 # OS files
 Thumbs.db
