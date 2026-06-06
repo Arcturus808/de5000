@@ -23,7 +23,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 - **Export** — save logged data as CSV (default), Excel (.xlsx), or JSON via native save dialog
 - **Measurement modes** — displays active modes (Auto Range, LCR Auto, Delta, Calibration, Sorting, Parallel)
 - **Tooltips** — info icons with detailed descriptions of measurement parameters
-- **Portable** — single executable, no installation required (~18 MB)
+- **Portable** — single executable, no installation required (~7 MB)
 
 ## Screenshot
 
