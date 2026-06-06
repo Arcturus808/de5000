@@ -1,6 +1,6 @@
 [package]
 name = "de5000-tauri"
-version = "1.0.0-alpha.2"
+version = "1.0.0-alpha.11"
 edition = "2021"
 license = "MIT"
 
@@ -18,7 +18,7 @@ tauri-plugin-fs = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serialport = "4"
-ntfy-rs = { git = "https://github.com/Arcturus808/ntfy-rs", rev = "19d2ec3" }
+ntfy-rs = { git = "https://github.com/Arcturus808/ntfy-rs", rev = "a17af76", default-features = false }
 local-ip-address = "0.6"
 tokio = { version = "1", features = ["time"] }
 
@@ -26,3 +26,5 @@ tokio = { version = "1", features = ["time"] }
 strip = true
 lto = true
 codegen-units = 1
+opt-level = "z"
+panic = "abort"
