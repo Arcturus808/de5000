@@ -1,6 +1,6 @@
 {
   "productName": "DE-5000 Monitor",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "identifier": "com.de5000.monitor",
   "build": {
     "frontendDist": "../build",
