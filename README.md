@@ -10,7 +10,7 @@ Real-time monitoring software for the **DER EE DE-5000 LCR Meter**, available as
 | App | Stack | Serial Access | Push Notifications | Portability |
 |-----|-------|---------------|-------------------|-------------|
 | [**de5000-svelte**](./de5000-svelte) | SvelteKit SPA | Web Serial API (Chrome/Edge) | Any ntfy server (fetch-based) | Runs in browser |
-| [**de5000-tauri**](./de5000-tauri) | Tauri v2 (Rust + SvelteKit) | Native serial (Rust `serialport`) | Embedded ntfy-rs server | Single portable `.exe` (~8 MB) |
+| [**de5000-tauri**](./de5000-tauri) | Tauri v2 (Rust + SvelteKit) | Native serial (Rust `serialport`) | Embedded ntfy-rs server | Single portable executable (~8 MB) |
 
 ### Screenshots
 
@@ -45,7 +45,7 @@ npm run dev
 
 Open in Chrome 89+ or Edge 89+ (Web Serial API required).
 
-### Desktop App (Windows / macOS)
+### Desktop App (Windows / macOS / Linux)
 
 ```bash
 cd de5000-tauri

@@ -7,7 +7,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 [![codecov](https://codecov.io/github/Arcturus808/de5000/graph/badge.svg?token=1GZWIKIE26)](https://codecov.io/github/Arcturus808/de5000)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-orange)
-![Windows](https://img.shields.io/badge/platform-Windows-blue) ![macOS](https://img.shields.io/badge/platform-macOS-silver)
+![Windows](https://img.shields.io/badge/platform-Windows-blue) ![macOS](https://img.shields.io/badge/platform-macOS-silver) ![Linux](https://img.shields.io/badge/platform-Linux-yellow)
 
 ## Features
 
@@ -34,6 +34,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 ### To Run
 - **Windows:** Windows 10/11 (WebView2 runtime pre-installed)
 - **macOS:** macOS 12+ (Monterey or later)
+- **Linux:** Ubuntu 22.04+ / Debian 12+ / Fedora 39+ (WebKitGTK required)
 - DE-5000 LCR Meter connected via USB serial adapter
 
 ### To Build
@@ -41,6 +42,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 - [Node.js](https://nodejs.org/) (v18+)
 - npm
 - **macOS:** Xcode Command Line Tools (`xcode-select --install`)
+- **Linux:** System libraries (see below)
 
 ## IR to USB Adapter
 
@@ -95,8 +97,11 @@ Protect the USB module with clear heat shrink.
 Download the latest release from [Releases](../../releases):
 - **Windows:** `de5000-tauri.exe` — no installation needed
 - **macOS:** `de5000-tauri.app` — move to Applications folder
+- **Linux:** `de5000-tauri_*.AppImage` — make executable and run
 
 > **macOS:** On first launch, right-click the app → Open to bypass Gatekeeper (the app is not notarized). This is only needed once.
+
+> **Linux:** After downloading the AppImage, run `chmod +x de5000-tauri_*.AppImage` then `./de5000-tauri_*.AppImage`.
 
 1. Connect your DE-5000 to your PC via USB serial adapter
 2. Launch the application
@@ -123,6 +128,15 @@ Add-MpPreference -ExclusionPath "<project-path>\src-tauri\target"
 xcode-select --install
 ```
 
+**Linux only** — Install system dependencies:
+```bash
+# Ubuntu / Debian
+sudo apt install libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libudev-dev libssl-dev
+
+# Fedora
+sudo dnf install webkit2gtk4.1-devel gtk3-devel libappindicator-gtk3-devel systemd-devel openssl-devel
+```
+
 ### Development
 
 ```bash
@@ -141,11 +155,15 @@ npx tauri build --no-bundle
 
 # macOS: .app bundle
 npx tauri build
+
+# Linux: AppImage + .deb
+npx tauri build
 ```
 
 Output:
 - **Windows:** `src-tauri/target/release/de5000-tauri.exe`
 - **macOS:** `src-tauri/target/release/bundle/macos/de5000-tauri.app`
+- **Linux:** `src-tauri/target/release/bundle/deb/de5000-tauri_*.deb` and `src-tauri/target/release/bundle/appimage/de5000-tauri_*.AppImage`
 
 ## Architecture
 
