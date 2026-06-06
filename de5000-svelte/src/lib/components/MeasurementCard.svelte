@@ -5,6 +5,10 @@
 	export let secQuantity = '--';
 	export let secValue = '--';
 	export let secUnits = '--';
+
+	function formatUnits(units) {
+		return units.replace(/Ohm/g, 'Ω').replace(/u/g, 'μ');
+	}
 </script>
 
 <div class="measurement-card">
@@ -14,7 +18,7 @@
 			<span class="measurement-value">{mainValue}</span>
 			<div class="measurement-units-group">
 				<span class="measurement-label">{mainQuantity}</span>
-				<span class="measurement-units">{mainUnits}</span>
+				<span class="measurement-units">{formatUnits(mainUnits)}</span>
 			</div>
 		</div>
 	</div>
@@ -25,7 +29,7 @@
 			<span class="measurement-value">{secValue}</span>
 			<div class="measurement-units-group">
 				<span class="measurement-label">{secQuantity}</span>
-				<span class="measurement-units">{secUnits}</span>
+				<span class="measurement-units">{formatUnits(secUnits)}</span>
 			</div>
 		</div>
 	</div>

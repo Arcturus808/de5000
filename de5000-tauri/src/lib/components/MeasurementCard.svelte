@@ -7,7 +7,7 @@
 	export let secUnits = '--';
 
 	function formatUnits(units) {
-		return units.replace(/Ohm/g, 'Ω');
+		return units.replace(/Ohm/g, 'Ω').replace(/u/g, 'μ');
 	}
 </script>
 

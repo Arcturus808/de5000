@@ -3,7 +3,7 @@
 	import { formatDisplayValue } from '$lib/utils/format.js';
 
 	function formatUnits(units) {
-		return units ? units.replace(/Ohm/g, 'Ω') : '';
+		return units ? units.replace(/Ohm/g, 'Ω').replace(/u/g, 'μ') : '';
 	}
 
 	$: m = $lastMeasurement;
@@ -85,7 +85,7 @@
 		if (abs >= 1e3) return `${(val / 1e3).toFixed(3)} k${u}`;
 		if (abs >= 1) return `${val.toFixed(3)} ${u}`;
 		if (abs >= 1e-3) return `${(val * 1e3).toFixed(3)} m${u}`;
-		if (abs >= 1e-6) return `${(val * 1e6).toFixed(3)} µ${u}`;
+		if (abs >= 1e-6) return `${(val * 1e6).toFixed(3)} μ${u}`;
 		return `${val.toExponential(3)} ${u}`;
 	}
 
@@ -136,7 +136,7 @@
 					<td class="value">{mainDetail}</td>
 				</tr>
 				<tr>
-					<td class="label">Secondary</td>
+					<td class="label">Secondary{m?.sec_quantity ? ` (${m.sec_quantity})` : ''}</td>
 					<td class="value">{secDetail}</td>
 				</tr>
 				<tr>
