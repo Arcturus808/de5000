@@ -256,7 +256,7 @@ npm run tauri build --no-bundle    # Portable .exe only
 npm run tauri build                # Full bundle (MSI + NSIS installer)
 ```
 
-Output: `src-tauri/target/release/de5000-tauri.exe` (~8 MB)
+Output: `src-tauri/target/release/de5000-tauri.exe` (~18 MB)
 
 ### 7.3 Prerequisites
 
