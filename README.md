@@ -45,7 +45,7 @@ npm run dev
 
 Open in Chrome 89+ or Edge 89+ (Web Serial API required).
 
-### Desktop App (Windows)
+### Desktop App (Windows / macOS)
 
 ```bash
 cd de5000-tauri

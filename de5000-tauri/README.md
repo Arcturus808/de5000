@@ -7,7 +7,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 [![codecov](https://codecov.io/github/Arcturus808/de5000/graph/badge.svg?token=1GZWIKIE26)](https://codecov.io/github/Arcturus808/de5000)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-orange)
-![Windows](https://img.shields.io/badge/platform-Windows-blue)
+![Windows](https://img.shields.io/badge/platform-Windows-blue) ![macOS](https://img.shields.io/badge/platform-macOS-silver)
 
 ## Features
 
@@ -23,7 +23,7 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 - **Export** — save logged data as CSV (default), Excel (.xlsx), or JSON via native save dialog
 - **Measurement modes** — displays active modes (Auto Range, LCR Auto, Delta, Calibration, Sorting, Parallel)
 - **Tooltips** — info icons with detailed descriptions of measurement parameters
-- **Portable** — single `.exe`, no installation required (~8 MB)
+- **Portable** — single executable, no installation required (~8 MB)
 
 ## Screenshot
 
@@ -32,13 +32,15 @@ Built with [Tauri v2](https://tauri.app/) (Rust backend) and [SvelteKit](https:/
 ## Requirements
 
 ### To Run
-- Windows 10/11 (WebView2 runtime pre-installed)
+- **Windows:** Windows 10/11 (WebView2 runtime pre-installed)
+- **macOS:** macOS 12+ (Monterey or later)
 - DE-5000 LCR Meter connected via USB serial adapter
 
 ### To Build
 - [Rust toolchain](https://rustup.rs/) (v1.70+)
 - [Node.js](https://nodejs.org/) (v18+)
 - npm
+- **macOS:** Xcode Command Line Tools (`xcode-select --install`)
 
 ## IR to USB Adapter
 
@@ -90,7 +92,11 @@ Protect the USB module with clear heat shrink.
 
 ## Quick Start
 
-Download the latest `de5000-tauri.exe` from [Releases](../../releases) and run it. No installation needed.
+Download the latest release from [Releases](../../releases):
+- **Windows:** `de5000-tauri.exe` — no installation needed
+- **macOS:** `de5000-tauri.app` — move to Applications folder
+
+> **macOS:** On first launch, right-click the app → Open to bypass Gatekeeper (the app is not notarized). This is only needed once.
 
 1. Connect your DE-5000 to your PC via USB serial adapter
 2. Launch the application
@@ -105,9 +111,16 @@ Download the latest `de5000-tauri.exe` from [Releases](../../releases) and run i
 ```bash
 # Install npm dependencies
 npm install
+```
 
-# (Windows) Add Defender exclusion to prevent build file-locking issues (run as admin)
+**Windows only** — Add Defender exclusion to prevent build file-locking issues (run as admin):
+```powershell
 Add-MpPreference -ExclusionPath "<project-path>\src-tauri\target"
+```
+
+**macOS only** — Install Xcode Command Line Tools (if not already installed):
+```bash
+xcode-select --install
 ```
 
 ### Development
@@ -123,14 +136,16 @@ Opens the app with hot-reload for frontend changes.
 ### Production Build
 
 ```bash
-# Portable .exe only
+# Windows: portable .exe only
 npx tauri build --no-bundle
 
-# Full bundle (MSI + NSIS installer)
+# macOS: .app bundle
 npx tauri build
 ```
 
-Output: `src-tauri/target/release/de5000-tauri.exe`
+Output:
+- **Windows:** `src-tauri/target/release/de5000-tauri.exe`
+- **macOS:** `src-tauri/target/release/bundle/macos/de5000-tauri.app`
 
 ## Architecture
 
