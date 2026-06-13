@@ -7,6 +7,7 @@ A **SvelteKit single-page application** for real-time monitoring of the DER EE D
 ![SvelteKit](https://img.shields.io/badge/SvelteKit-v2-orange)
 ![Chrome](https://img.shields.io/badge/Chrome-89+-green)
 ![Edge](https://img.shields.io/badge/Edge-89+-blue)
+[![Sponsor](https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/Arcturus808)
 
 ## Features
 
