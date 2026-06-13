@@ -2,7 +2,7 @@
 
 Real-time monitoring software for the **DER EE DE-5000 LCR Meter**, available as both a web app and a native desktop app.
 
-[![codecov](https://codecov.io/github/Arcturus808/de5000/graph/badge.svg?token=1GZWIKIE26)](https://codecov.io/github/Arcturus808/de5000)
+[![codecov](https://codecov.io/gh/Arcturus808/de5000/graph/badge.svg?token=9KHDI77OOS)](https://codecov.io/gh/Arcturus808/de5000)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Apps
