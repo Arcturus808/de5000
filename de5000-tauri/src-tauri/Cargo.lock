@@ -747,7 +747,7 @@ name = "de5000-tauri"
 version = "1.0.0-alpha.11"
 dependencies = [
  "local-ip-address",
- "ntfy-rs",
+ "ntfy-server-rs",
  "serde",
  "serde_json",
  "serialport",
@@ -872,7 +872,7 @@ dependencies = [
  "libc",
  "option-ext",
  "redox_users",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -1046,7 +1046,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2564,9 +2564,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "38bf9645c8b145698bb0b18a4637dcacbc421ea49bef2317e4fd8065a387cf21"
 
 [[package]]
-name = "ntfy-rs"
-version = "0.1.0-beta.5"
-source = "git+https://github.com/Arcturus808/ntfy-rs?rev=a17af76#a17af7668d86d07afe1b000dd73f3e4ccfe88419"
+name = "ntfy-server-rs"
+version = "0.1.0-beta.7"
+source = "git+https://github.com/Arcturus808/ntfy-rs?rev=002aa79a0147d7ffef5236792e0e75894093ef69#002aa79a0147d7ffef5236792e0e75894093ef69"
 dependencies = [
  "anyhow",
  "axum",
@@ -2602,7 +2602,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -3353,7 +3353,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -3751,7 +3751,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5767,7 +5767,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

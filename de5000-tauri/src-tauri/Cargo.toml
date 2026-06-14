@@ -18,7 +18,7 @@ tauri-plugin-fs = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serialport = "4"
-ntfy-rs = { git = "https://github.com/Arcturus808/ntfy-rs", rev = "a17af76", default-features = false }
+ntfy-rs = { package = "ntfy-server-rs", git = "https://github.com/Arcturus808/ntfy-rs", rev = "002aa79a0147d7ffef5236792e0e75894093ef69", default-features = false }
 local-ip-address = "0.6"
 tokio = { version = "1", features = ["time"] }
 
